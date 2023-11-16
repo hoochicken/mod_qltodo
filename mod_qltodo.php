@@ -6,6 +6,8 @@
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+// namespace QlformNamespace\Module\Qltodo\Site\Helper;
+
 // no direct access
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
@@ -55,8 +57,6 @@ try {
     /* get data of single entry, if needed */
     if ($displayEntry) {
         $entry = $helper->getEntry($ident);
-        $entry = $helper->setImage($entry, $typeMappingEntry, $params->get('entry_image_default', ''));
-        $entry = $helper->addTags($entry, $label, $module->id, $baseUrl, $params->get('linkIdent', 'id'));
         $entry = $helper->flattenData($entry, $typeMapping, (bool)$params->get('entry_display', false), (bool)$params->get('imageTag', false), $columnsLinked);
     }
 
@@ -77,41 +77,13 @@ try {
     $columns = $helper->getColumnLabels();
     $data = $helper->getData();
 
-    if (file_exists(__DIR__ . '/php/classes/QlDatabasetableDataFilter.php')) {
-        require_once __DIR__ . '/php/classes/QlDatabasetableDataFilter.php';
-        $filter = new QlDatabasetableDataFilter($module, $params, Factory::getContainer()->get(DatabaseInterface::class));
-        $data = $filter->filter($data);
-    }
-
     foreach ($data as $k => $item) {
-        $item = $helper->setImage($item, $typeMappingEntry, $params->get('entry_image_default', ''));
-        $item = $helper->addTags($item, Text::_($params->get('label_more', '')), $module->id, $baseUrl, $params->get('linkIdent', 'id'));
-        $item = $helper->flattenData($item, $typeMapping, (bool)$params->get('entry_display', false), (bool)$params->get('imageTag', false), $columnsLinked);
-        $data[$k] = $item;
+        $data[$k] = $helper->flattenData($item, $typeMapping, (bool)$params->get('entry_display', false), (bool)$params->get('imageTag', false), $columnsLinked);
     }
 
     $prev = $helper->getPrev($data, $entry, $params->get('identColumn', 'id'));
     $next = $helper->getNext($data, $entry, $params->get('identColumn', 'id'));
 
-    // data for charts
-    $displayCharts = $params->get('charts_display', 0);
-    if ($displayCharts) {
-        $chartLimit = $params->get('charts_limit', 5);
-        $chartLabelInLegend = $params->get('charts_label_in_legend', '# in counts');
-        $chartsLabelColumn = $params->get('charts_label_column', 'label');
-        $chartsBlacklist = $params->get('charts_blacklist', '');
-        $data = array_filter($data, function($item) use ($chartsBlacklist) { return false === strpos(strtolower($item['title'] ?? ''), $chartsBlacklist);});
-        $dataForCharts = array_slice($data, 0, $chartLimit > 0 ? $chartLimit : 0);
-        $dataForCharts_labels = array_column($dataForCharts, $chartsLabelColumn);
-        if (empty($dataForCharts_labels)) {
-            $errores->addError(sprintf('Column "%s" could not be found.', $chartsLabelColumn));
-            $dataForCharts_labels = range(1, $dataForCharts);
-        }
-        array_walk($dataForCharts_labels, function(&$item) {
-            $item = sprintf('"%s"', $item);
-        });
-        $dataForCharts_counter = array_column($dataForCharts, $params->get('charts_counter_column', 'counter'));
-    }
     /* finally display */
     require ModuleHelper::getLayoutPath('mod_qltodo', $params->get('layout', 'default'));
 } catch (Exception $e) {

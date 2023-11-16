@@ -1,5 +1,7 @@
 <?php
 
+// namespace QlformNamespace\Module\Qltodo\Site\Helper\php;
+
 class QltodoError
 {
     private array $errors = [];

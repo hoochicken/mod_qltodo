@@ -1,6 +1,6 @@
 {
-  "name": "hoochicken/datagrid",
-  "description": "datagrid",
+  "name": "hoochicken/parameter-bag",
+  "description": "Parameter bag",
   "license": "MIT",
   "authors": [
     {
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Hoochicken\\Datagrid\\": "src"
+      "Hoochicken\\ParameterBag\\": "src"
     }
   }
 }

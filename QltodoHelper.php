@@ -110,40 +110,6 @@ class QltodoHelper
             : $this->getDataByTable();
     }
 
-    public function setImageMultiple(array $data, array $columnsDataMap = [], string $defaultImage = ''): array
-    {
-        if (0 === count($data) || 0 === count($columnsDataMap)) {
-            return $data;
-        }
-        foreach ($data as $k => $item) {
-            $data[$k] = $this->setImage($item, $columnsDataMap, $defaultImage);
-        }
-        return $data;
-    }
-
-    public function setImage(array $entry, array $columnsDataMap = [], string $defaultImage = ''): array
-    {
-        foreach ($columnsDataMap as $colname => $type) {
-            if (QltodoHelper::TYPE_IMAGE !== $type || (empty($entry[$colname]) && empty($defaultImage))) {
-                continue;
-            }
-            $entry[$colname] = empty($entry[$colname]) ? $defaultImage : $entry[$colname];
-            $entry[QltodoHelper::QLTODO_TAGS][$colname] = static::generateHtmlImage($entry[$colname]);
-        }
-        return $entry;
-    }
-
-    public function addTags(array $entry, string $linkText, int $moduleId, string $baseUrl = '', string $identColumn = 'id'): array
-    {
-        $id = $entry[$identColumn] ?? sprintf('Column %s was not found', $identColumn);
-        $url = QltodoHelper::getUrl($baseUrl, $moduleId, $id);
-        $entry[QltodoHelper::QLTODO_TAGS][QltodoHelper::QLTODO_LINK] = QltodoHelper::getLink($baseUrl, $linkText, $moduleId, $id);
-        $entry[QltodoHelper::QLTODO][QltodoHelper::GETPARAM_ENTRYID] = $id;
-        $entry[QltodoHelper::QLTODO][QltodoHelper::GETPARAM_MODULEID] = $moduleId;
-        $entry[QltodoHelper::QLTODO][QltodoHelper::QLTODO_URL] = $url;
-        return $entry;
-    }
-
     public function flattenData(array $entry, array $typeMapping, bool $entryDisplay = false, bool $imageTag = false, array $columnsLinked = []): array
     {
         foreach($typeMapping as $columnName => $type) {

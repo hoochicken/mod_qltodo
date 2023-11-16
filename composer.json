@@ -1,0 +1,6 @@
+{
+    "require": {
+        "hoochicken/dbtable": "^1.0",
+        "hoochicken/parameter-bag": "^1.2"
+    }
+}

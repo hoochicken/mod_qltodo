@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Hoochicken\\Datagrid\\' => array($vendorDir . '/hoochicken/datagrid/src'),
+    'Hoochicken\\ParameterBag\\' => array($vendorDir . '/hoochicken/parameter-bag/src'),
+    'Hoochicken\\Dbtable\\' => array($vendorDir . '/hoochicken/dbtable/src'),
 );

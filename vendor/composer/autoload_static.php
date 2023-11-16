@@ -9,14 +9,19 @@ class ComposerStaticInitc15881939b779e979b02595c7853ad95
     public static $prefixLengthsPsr4 = array (
         'H' => 
         array (
-            'Hoochicken\\Datagrid\\' => 20,
+            'Hoochicken\\ParameterBag\\' => 24,
+            'Hoochicken\\Dbtable\\' => 19,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Hoochicken\\Datagrid\\' => 
+        'Hoochicken\\ParameterBag\\' => 
         array (
-            0 => __DIR__ . '/..' . '/hoochicken/datagrid/src',
+            0 => __DIR__ . '/..' . '/hoochicken/parameter-bag/src',
+        ),
+        'Hoochicken\\Dbtable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hoochicken/dbtable/src',
         ),
     );
 

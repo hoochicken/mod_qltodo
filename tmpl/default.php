@@ -9,6 +9,7 @@
 use Hoochicken\Datagrid\Datagrid;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Language\Text;
 
 // no direct access
 defined('_JEXEC') or die;
@@ -18,26 +19,32 @@ $wa->registerAndUseStyle('qltodo', 'mod_qltodo/styles.css');
 
 /* @var stdClass $module */
 /* @var \Joomla\Registry\Registry $params */
-/* @var array $columns */
 /* @var array $data */
 /* @var array $errores */
 /* @var bool $displayEntry */
-/* @var bool $displayCharts */
 /* @var bool $displayList */
 ?>
 
-<div class="qltodo" id="module<?php echo $module->id ?>">
-    <?php
-    if (0 < count($errores->getErrors())) {
-        $errores = array_column($errores->getErrors(), QltodoError::ATTR_MESSAGE);
-        echo sprintf('<div class="alert alert-info">%s</div>', implode('<br />', $errores));
-    }
-    if ($displayEntry) require ModuleHelper::getLayoutPath('mod_qltodo', 'default_entry');
-    if ($displayCharts) require ModuleHelper::getLayoutPath('mod_qltodo', 'default_charts');
-    if ($displayList && $params->get('display', QltodoHelper::DISPLAY_DEFAULT) === QltodoHelper::DISPLAY_CARDS) {
-        require ModuleHelper::getLayoutPath('mod_qltodo', 'default_cards');
-    } elseif ($displayList) {
-        require ModuleHelper::getLayoutPath('mod_qltodo', 'default_table');
-    }
-    ?>
+<div class="qltodo <?= $params->get('shape', 'round') === 'round' ? 'round' : 'rectangular' ?>" id="module<?php echo $module->id ?>">
+   <a href="#" title="Todo">
+                    <span href="#" title="Todo" type="button" class="btn btn-primary">
+                        <i class="fa fa-chess-knight"></i>
+                    </span>
+                    <span title="Todo" class="qltodo-label">
+                         <?php
+                         if (0 < count($errores->getErrors())) {
+                             $errores = array_column($errores->getErrors(), QltodoError::ATTR_MESSAGE);
+                             echo sprintf('<div class="alert alert-info">%s</div>', implode('<br />', $errores));
+                         }
+                         if ($displayEntry) require ModuleHelper::getLayoutPath('mod_qltodo', 'default_entry');
+                         if ($displayList && $params->get('display', QltodoHelper::DISPLAY_DEFAULT) === QltodoHelper::DISPLAY_CARDS) {
+                             require ModuleHelper::getLayoutPath('mod_qltodo', 'default_list');
+                         }
+                         ?>
+                    </span>
+                </a>
 </div>
+<?php return; ?>
+
+
+
