@@ -1,0 +1,18 @@
+/*
+@package		mod_qltodo
+@copyright	    Copyright (C) 2023 ql.de All rights reserved.
+@author 		Mareike Riegel mareike.riegel@ql.de
+@license		GNU General Public License version 2 or later; see LICENSE.txt
+*/
+
+/** bootstrap*/
+.qltodo .card-group { display: flex; flex-flow: row wrap; }
+.qltodo .card { position: relative; display: flex; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.25rem; }
+.qltodo .card-body { flex: 1 1 auto; padding: 1rem 1rem; }
+.qltodo .card-title { margin-bottom: 0.5rem; }
+
+/** custom*/
+.qltodo {}
+.qltodo .card { float: left; }
+.qltodo .justify-content-between {-webkit-box-pack: justify!important;-ms-flex-pack: justify!important;justify-content: space-between!important;}
+.qltodo .d-flex { display: -webkit-box!important; display: -ms-flexbox!important; display: flex!important;}
