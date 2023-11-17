@@ -39,7 +39,7 @@ class SampleUsersTable extends Database
     {
         $data = [
             self::COLUMN_NAME => $name,
-            self::COLUMN_STATE => $status,
+            self::COLUMN_STATUS => $status,
             self::COLUMN_CREATED_AT => date('Y-m-d H:i:s'),
         ];
         $this->addEntry($data);

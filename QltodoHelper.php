@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 class QltodoHelper
 {
     public Joomla\Registry\Registry $params;
+    public Joomla\Registry\Registry $config;
     public stdClass $module;
     public $db;
     const NUMBER_COLUMNS = 10;
@@ -38,11 +39,12 @@ class QltodoHelper
     const QLTODO_URL = 'url';
     const URL_SCHEME = '%s://%s%s';
 
-    function __construct($module, $params, $db)
+    function __construct($module, $params, $db, $config)
     {
         $this->module = $module;
         $this->params = $params;
         $this->db = $db;
+        $this->config = $config;
     }
 
     public function getData(): array

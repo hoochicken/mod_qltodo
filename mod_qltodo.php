@@ -13,20 +13,24 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+// use QlformNamespace\Module\Qltodo\Site\Helper\php\QltodoTable;
 
 defined('_JEXEC') or die;
 require_once __DIR__ . '/QltodoHelper.php';
 require_once __DIR__ . '/php/classes/QltodoError.php';
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/php/classes/QltodoTable.php';
 
 /** @var stdClass $module */
 /** @var \Joomla\Registry\Registry $params */
 
 try {
+    // set up
     $errores = new QltodoError;
     $app = Factory::getApplication();
+    $config = Factory::getContainer()->get('config');
     $input = Factory::getApplication()->getInput();
-    $helper = new QltodoHelper($module, $params, Factory::getContainer()->get(DatabaseInterface::class));
+    $helper = new QltodoHelper($module, $params, Factory::getContainer()->get(DatabaseInterface::class), $config);
     $originalUrl = $helper->getOriginalUrl($helper->getCurrentUrl());
     $baseUrl = QltodoHelper::getBaseUrl();
     $columnsLinked = explode(',', $params->get('columnsLinked', ''));
@@ -34,6 +38,32 @@ try {
     $displayNavigation = (bool)$params->get('navigation', false);
     $cardLinkDisplay = $params->get('cardLinkDisplay', false);
     array_walk($columnsLinked, function(&$item) {$item = trim($item);});
+
+    // init database table
+    $qltodoTable = new QltodoTable($config->get('host', ''), $config->get('db', ''), $config->get('user', ''), $config->get('password', ''), $config->get('port', 3306));
+    $qltodoTable->setTable(str_replace('#__', $config->get('dbprefix', ''), QltodoTable::TABLE_NAME));
+    if (!$qltodoTable->tableExistsQltodo()) {
+        $qltodoTable->createTableQltodo();
+    }
+
+    // add
+    $qltodoTable->addQltodo('Georgina Marshall', true);
+
+    // remove
+    $id = 2;
+    $qltodoTable->removeEntryById($id);
+
+    // get entry by id
+    $entry = $qltodoTable->getEntryById(4);
+
+    // update entry by id
+    $qltodoTable->updateQltodo(4, []);
+
+    // get data
+    $data = $qltodoTable->getData();
+
+
+
 
     /* initiate mappings of table, cards and entry */
     $entryStructure = $helper->getEntryColumnType();
