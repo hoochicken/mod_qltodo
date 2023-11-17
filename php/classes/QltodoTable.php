@@ -91,9 +91,10 @@ class QltodoTable extends Database
 
     public function updateQltodo(int $id, array $data)
     {
-        $this->updateEntries([
-
-        ], sprintf('id = %', $id));
+        if (empty($data)) {
+            return;
+        }
+        $this->updateEntries($data, sprintf('id = %s', $id));
     }
 
     public function getData(array $selector = [], int $limit = 1000): array
@@ -103,7 +104,8 @@ class QltodoTable extends Database
 
     public function getEntryById(int $id): array
     {
-        $data = parent::getData([], sprintf('id = %', $id));
+        $this->setWhere(sprintf('id = %s', $id));
+        $data = parent::getData([], 1);
         return $data[0] ?? [];
     }
 

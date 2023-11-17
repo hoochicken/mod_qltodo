@@ -2,5 +2,10 @@
     "require": {
         "hoochicken/dbtable": "^1.0",
         "hoochicken/parameter-bag": "^1.2"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hoochicken\\Datagrid\\": "_lab/hoochicken/dbtable/src"
+        }
     }
 }

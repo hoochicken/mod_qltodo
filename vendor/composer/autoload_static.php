@@ -11,6 +11,7 @@ class ComposerStaticInitc15881939b779e979b02595c7853ad95
         array (
             'Hoochicken\\ParameterBag\\' => 24,
             'Hoochicken\\Dbtable\\' => 19,
+            'Hoochicken\\Datagrid\\' => 20,
         ),
     );
 
@@ -22,6 +23,10 @@ class ComposerStaticInitc15881939b779e979b02595c7853ad95
         'Hoochicken\\Dbtable\\' => 
         array (
             0 => __DIR__ . '/..' . '/hoochicken/dbtable/src',
+        ),
+        'Hoochicken\\Datagrid\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/_lab/hoochicken/dbtable/src',
         ),
     );
 

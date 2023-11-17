@@ -2,23 +2,23 @@
     "packages": [
         {
             "name": "hoochicken/dbtable",
-            "version": "v1.0.3",
-            "version_normalized": "1.0.3.0",
+            "version": "v1.0.4",
+            "version_normalized": "1.0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hoochicken/dbtable.git",
-                "reference": "e15e6c45a4d31033e49e54485a740f5a79d3bea1"
+                "reference": "cfadda7c05f4687ff786bd3aca6ea03fe29dcc71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hoochicken/dbtable/zipball/e15e6c45a4d31033e49e54485a740f5a79d3bea1",
-                "reference": "e15e6c45a4d31033e49e54485a740f5a79d3bea1",
+                "url": "https://api.github.com/repos/hoochicken/dbtable/zipball/cfadda7c05f4687ff786bd3aca6ea03fe29dcc71",
+                "reference": "cfadda7c05f4687ff786bd3aca6ea03fe29dcc71",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.0"
             },
-            "time": "2023-09-16T20:16:05+00:00",
+            "time": "2023-11-17T12:03:42+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -39,7 +39,7 @@
             "description": "Display content of database table",
             "support": {
                 "issues": "https://github.com/hoochicken/dbtable/issues",
-                "source": "https://github.com/hoochicken/dbtable/tree/v1.0.3"
+                "source": "https://github.com/hoochicken/dbtable/tree/v1.0.4"
             },
             "install-path": "../hoochicken/dbtable"
         },
