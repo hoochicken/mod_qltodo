@@ -16,29 +16,19 @@ defined('_JEXEC') or die;
 /* @var array $columns */
 /* @var array $data */
 /* @var Joomla\Application\ $app */
-/* @var string $imageColumn */
-/* @var string $labelColumn */
-/* @var string $cardCssClass */
-/* @var bool $cardLinkDisplay */
 ?>
-<div class="card-group">
+<ul class="">
     <?php foreach ($data as $k => $entry) : ?>
-        <?php $entryLink = $entry[QltodoHelper::QLTODO][QltodoHelper::QLTODO_URL] ?? ''; ?>
-        <div class="card <?php echo $cardCssClass; ?>">
-            <?php if ($cardLinkDisplay && !empty($entryLink)) : ?>
-            <a href="<?= $entryLink ?>">
-                <?php endif; ?>
-                <?php echo $entry[$imageColumn] ?? ''; ?>
-                <?php if ($params->get('cardLinkDisplay', false)) : ?>
-            </a>
-        <?php endif; ?>
+        <li class="item">
+            <strong><?= $entry['title'] ?? '' ?> (<?= $entry['id'] ?? '' ?>) </strong><br />
+            <?php if (!empty($entry['item_menu_title'] ?? '')) : ?>
+                <a href="#" class="item_menu_title"><?= $entry['item_menu_title'] ?></a><br />
+            <?php endif; ?>
+            <?php if (!empty($entry['description'] ?? '')) : ?>
+                <span class="description"><?= $entry['description'] ?? '' ?></span>
+            <?php endif; ?>
 
-            <div class="card-body">
-                <h5 class="card-title"><?php echo $entry[$labelColumn] ?? ''; ?></h5>
-                <?php if ($cardLinkDisplay && !empty($label)) : ?>
-                    <a href="<?= $entry[QltodoHelper::QLTODO_TAGS][QltodoHelper::QLTODO_URL] ?>"><?= $label ?></a>
-                <?php endif; ?>
-            </div>
-        </div>
+            <?php // print_r($entry); ?>
+        </li>
     <?php endforeach; ?>
-</div>
+</ul>

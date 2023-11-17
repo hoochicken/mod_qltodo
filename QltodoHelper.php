@@ -7,6 +7,8 @@
  */
 
 // no direct access
+use Hoochicken\ParameterBag\ParameterBag;
+
 defined('_JEXEC') or die;
 
 class QltodoHelper
@@ -14,46 +16,85 @@ class QltodoHelper
     public Joomla\Registry\Registry $params;
     public Joomla\Registry\Registry $config;
     public stdClass $module;
+    public ParameterBag $request;
+    public ?QltodoTable $qltodoTable;
     public $db;
-    const NUMBER_COLUMNS = 10;
-    const DISPLAY_DEFAULT = 'table';
-    const DISPLAY_TABLE = 'table';
-    const DISPLAY_CARDS = 'cards';
-    const TYPE_COLNAME = 'colname';
-    const TYPE_LABEL = 'label';
-    const TYPE_TYPE = 'type';
-    const PRFX_ENTRY = 'entry_';
     const TYPE_TEXT = 'text';
     const TYPE_IMAGE = 'image';
-    const HTML_IMG = '<img src="%s" />';
-    const HTML_AHREF = '<a href="%s" />%s</a>';
-    const HTML_AHREF_BUTTON = '<a class="btn btn-outline-secondary" href="%s" />%s</a>';
     const GETPARAM_MODULEID = 'modqltodo';
     const GETPARAM_ENTRYID = 'modqltodoentryid';
     const QLTODO = 'qlbdtable';
     const QLTODO_TAGS = 'qlbdtable_tags';
     const QLTODO_RAW_DATA = 'qlbdtable_raw_data';
-    const QLTODO_ID = 'id';
-    const QLTODO_MODULEID = 'module_id';
-    const QLTODO_LINK = 'link';
     const QLTODO_URL = 'url';
     const URL_SCHEME = '%s://%s%s';
 
-    function __construct($module, $params, $db, $config)
+    const FORM_ACTION_SAVE = 'qltodo_save';
+    const FORM_ACTION_LOAD = 'qltodo_load';
+    const FORM_ACTION_REMOVE = 'qltodo_remove';
+    const FORM_ACTION_UPDATE = 'qltodo_update';
+    const FORM_TITLE = 'qltodo_title';
+    const FORM_DESCRIPTION = 'qltodo_description';
+    const FORM_MENUITEMTITLE = 'qltodo_menuItemTitle';
+    const FORM_MENUITEMTID = 'qltodo_menuItemId';
+    const FORM_STATE = 'qltodo_state';
+    const FORM_WORKFLOW = 'qltodo_workflow';
+    const FORM_SEVERITY = 'qltodo_severity';
+
+    function __construct($module, $params, $db, $config, ParameterBag $request)
     {
         $this->module = $module;
         $this->params = $params;
         $this->db = $db;
         $this->config = $config;
+        $this->request = $request;
+    }
+
+    public function initDbTable($config)
+    {
+        // init database table
+        $this->qltodoTable = new QltodoTable($config->get('host', ''), $config->get('db', ''), $config->get('user', ''), $config->get('password', ''), $config->get('port', 3306));
+        $this->qltodoTable->setTable(str_replace('#__', $config->get('dbprefix', ''), QltodoTable::TABLE_NAME));
+        if (!$this->qltodoTable->tableExistsQltodo()) {
+            $this->qltodoTable->createTableQltodo();
+        }
+    }
+
+    public function addQltodo(ParameterBag $request)
+    {
+        $this->qltodoTable->addQltodo(
+            $request->getString(static::FORM_TITLE, ''),
+            $request->getString(static::FORM_DESCRIPTION, ''),
+            $request->getString(static::FORM_MENUITEMTITLE, ''),
+            $request->getInt(static::FORM_MENUITEMTID, 0),
+            $request->getInt(static::FORM_STATE, 1),
+            $request->getInt(static::FORM_WORKFLOW, 1),
+            $request->getInt(static::FORM_SEVERITY, 1),
+            $request->getString('REQUEST_URI', $request->getString('SCRIPT_NAME', ''))
+        );
+    }
+
+    public function removeEntryById(int $id)
+    {
+        $this->qltodoTable->removeEntryById($id);;
+    }
+
+    public function getEntryById(int $id): array
+    {
+        return $this->qltodoTable->getEntryById($id);
+    }
+
+    public function updateQltodo(int $id)
+    {
+        $data = [
+
+        ];
+        $this->qltodoTable->updateQltodo($id, $data);
     }
 
     public function getData(): array
     {
-        $data = $this->getDataRaw();
-        foreach ($data as $k => $entry) {
-            $data[$k] = $this->enrichEntryWithDefaults($entry);
-        }
-        return $data;
+        return $this->qltodoTable->getData();
     }
 
     public function getIdentFromEntry(array $entry, string $identColumn)
@@ -112,123 +153,9 @@ class QltodoHelper
             : $this->getDataByTable();
     }
 
-    public function flattenData(array $entry, array $typeMapping, bool $entryDisplay = false, bool $imageTag = false, array $columnsLinked = []): array
+    public function getBaseUrl(): string
     {
-        foreach($typeMapping as $columnName => $type) {
-            if ($imageTag && static::TYPE_IMAGE === $type) {
-                $entry[$columnName] = $entry[QltodoHelper::QLTODO_TAGS][$columnName] ?? $entry[$columnName];
-            }
-            if ($entryDisplay && in_array($columnName, $columnsLinked)) {
-                $url = $entry[static::QLTODO][static::QLTODO_URL];
-                $entry[$columnName] = static::generateHtmlLink($url, $entry[$columnName] ?? '');
-            }
-        }
-        return $entry;
-    }
-
-    public static function getBaseUrl(): string
-    {
-        return (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    }
-
-    public static function getLink(string $baseUrl, string $linkText, int $moduleId, $ident): string
-    {
-        $url = static::getUrl($baseUrl, $moduleId, $ident);
-        return static::generateHtmlLink($url, $linkText);
-    }
-
-    public static function generateHtmlLink(string $url, string $linkText): string
-    {
-        return sprintf(QltodoHelper::HTML_AHREF, $url, $linkText);
-    }
-
-    public static function generateHtmlButton(string $url, string $linkText): string
-    {
-        return sprintf(QltodoHelper::HTML_AHREF_BUTTON, $url, $linkText);
-    }
-
-    public static function generateHtmlImage(string $imagePath): string
-    {
-        return sprintf(QltodoHelper::HTML_IMG, $imagePath);
-    }
-
-    public static function getUrl(string $baseUrl, int $moduleId, $ident): string
-    {
-        $link = sprintf('%s=%s&%s=%s',
-            QltodoHelper::GETPARAM_MODULEID, $moduleId,
-            QltodoHelper::GETPARAM_ENTRYID, $ident
-        );
-
-        $regex = QltodoHelper::GETPARAM_MODULEID . '|' . QltodoHelper::GETPARAM_ENTRYID;
-        $baseUrl = preg_replace('/(&|\?)(' . $regex . ')=([0-9]*)/', '', $baseUrl);
-
-        if (false !== strpos($baseUrl, '?')) {
-            $link = $baseUrl . '&' . $link;
-        } else {
-            $link = $baseUrl . '?' . $link;
-        }
-        return $link;
-    }
-
-    public function getColumnType(string $prefix = ''): array
-    {
-        return $this->getColumnInfo(QltodoHelper::TYPE_TYPE, $prefix);
-    }
-
-    public function getEntryStructure(): array
-    {
-        return $this->getStructure(QltodoHelper::PRFX_ENTRY);
-    }
-
-    public function getEntryColumnType(): array
-    {
-        return $this->getColumnInfo(QltodoHelper::TYPE_TYPE, QltodoHelper::PRFX_ENTRY);
-    }
-
-    public function getColumnLabels(string $prefix = ''): array
-    {
-        return $this->getColumnInfo(QltodoHelper::TYPE_LABEL, $prefix);
-    }
-
-    public function getEntryColumnLabels(): array
-    {
-        return $this->getColumnInfo(QltodoHelper::TYPE_LABEL, QltodoHelper::PRFX_ENTRY);
-    }
-
-    public function getColumnInfo(string $type, string $prefix = '')
-    {
-        $structure = $this->getStructure($prefix);
-        array_walk($structure, function (&$item) use ($type) {
-            $item = $item[$type];
-        });
-        return $structure;
-    }
-
-    public function getStructure(string $prefix = ''): array
-    {
-        $columnField = $prefix . 'column%s';
-
-        $structure = [];
-        for ($i = 1; $i <= QltodoHelper::NUMBER_COLUMNS; $i++) {
-
-            $fieldname = sprintf($columnField, $i);
-            $column = $this->params->get($fieldname);
-            $columnDisplay = explode(';', (string)$column);
-            if (3 !== count($columnDisplay)) {
-                continue;
-            }
-            $columnName = $columnDisplay[0];
-            $columnLabel = $columnDisplay[1];
-            $columnType = $columnDisplay[2];
-
-            $structure[$columnName] = [
-                'column' => $columnName,
-                QltodoHelper::TYPE_COLNAME => $columnName,
-                QltodoHelper::TYPE_TYPE => $columnType,
-                QltodoHelper::TYPE_LABEL => $columnLabel,
-            ];
-        }
-        return $structure;
+        return (empty($this->request->getString('HTTPS', '')) ? 'http' : 'https') . '://' . $this->request->getString('HTTP_HOST', '') . $this->request->getString('REQUEST_URI', '');
     }
 
     private function getDataByRawQuery(): array
@@ -298,14 +225,6 @@ class QltodoHelper
 
         $this->db->setQuery($query);
         return $this->db->loadAssoc() ?? [];
-    }
-
-    public function enrichEntryWithDefaults(array $entry): array
-    {
-        $entry[QltodoHelper::QLTODO_RAW_DATA] = $entry;
-        $entry[QltodoHelper::QLTODO_TAGS] = [];
-        $entry[QltodoHelper::QLTODO] = [];
-        return $entry;
     }
 
     public function getCurrentUrl(): string

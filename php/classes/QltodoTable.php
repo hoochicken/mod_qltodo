@@ -58,6 +58,8 @@ class QltodoTable extends Database
             static::COLUMN_TITLE => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_TITLE),
             static::COLUMN_DESCRIPTION => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_DESCRIPTION),
             static::COLUMN_PAGE_URL => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_PAGE_URL),
+            static::COLUMN_MENU_ITEM_TITLE => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_MENU_ITEM_TITLE),
+            static::COLUMN_MENU_ITEM_ID => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_MENU_ITEM_ID),
             static::COLUMN_STATE => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_STATE),
             static::COLUMN_WORKFLOW => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_WORKFLOW),
             static::COLUMN_SEVERITY => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_SEVERITY),
@@ -75,11 +77,17 @@ class QltodoTable extends Database
         return static::$definition;
     }
 
-    public function addQltodo(string $title = '', string $description = '')
+    public function addQltodo(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = '')
     {
         $this->addEntry([
             static::COLUMN_TITLE => $title,
             static::COLUMN_DESCRIPTION => $description,
+            static::COLUMN_MENU_ITEM_TITLE => $menuItemTitle,
+            static::COLUMN_MENU_ITEM_ID => $menuItemId,
+            static::COLUMN_STATE => $state,
+            static::COLUMN_WORKFLOW => $workflow,
+            static::COLUMN_SEVERITY => $severity,
+            static::COLUMN_PAGE_URL => $pageUrl,
             static::COLUMN_CREATED_AT => date(static::DB_DATE_FORMAT),
         ]);
     }
