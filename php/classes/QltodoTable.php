@@ -77,7 +77,7 @@ class QltodoTable extends Database
         return static::$definition;
     }
 
-    public function addQltodo(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = '')
+    public function createQltodo(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = '')
     {
         $this->addEntry([
             static::COLUMN_TITLE => $title,

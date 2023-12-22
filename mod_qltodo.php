@@ -38,32 +38,40 @@ try {
     $displayNavigation = (bool)$params->get('navigation', false);
     $displayList = $params->get('displayList', true);
     $displayEntry = false;
+    $displayBackToList = false;
+    $entryId = 0;
     $entry = [];
 
-    // add
+    // create
     if ($request->getString(QltodoHelper::FORM_ACTION_SAVE, 0)) {
-        $helper->addQltodo($request);
+        $helper->createQltodo($request);
     }
 
-    // remove
-    if ($request->getString(QltodoHelper::FORM_ACTION_REMOVE, 0)) {
-        $helper->removeEntryById($request->getString('qltodo_id', 0));
+    // delete
+    if ($request->getString(QltodoHelper::FORM_ACTION_DELETE, 0)) {
+        $helper->removeEntryById($request->getString(QltodoHelper::FORM_ID, 0));
     }
 
     // load
     if ($request->getString(QltodoHelper::FORM_ACTION_LOAD, 0)) {
-        $helper->getEntryById($request->getString('qltodo_id', 0));
+        $entry = $helper->getEntryById($request->getString(QltodoHelper::FORM_ID, 0));
+        $entryId = $entry[QltodoTable::COLUMN_ID];
+        $displayEntry = true;
     }
 
     // load
     if ($request->getString(QltodoHelper::FORM_ACTION_UPDATE, 0)) {
-        $helper->updateQltodo($request->getString('qltodo_id'));
+        $data = [];
+        $entry = $helper->updateQltodo($request->getString(QltodoHelper::FORM_ID), $data);
+        $entryId = $entry[QltodoTable::COLUMN_ID];
     }
 
     $data = $helper->getData();
 
     $prev = $helper->getPrev($data, $entry, $params->get('identColumn', 'id'));
     $next = $helper->getNext($data, $entry, $params->get('identColumn', 'id'));
+
+    $displayForm = !$displayEntry;
 
     /* finally display */
     require ModuleHelper::getLayoutPath('mod_qltodo', $params->get('layout', 'default'));

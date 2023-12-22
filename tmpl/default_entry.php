@@ -16,7 +16,6 @@ defined('_JEXEC') or die;
 /* @var stdClass $module */
 /* @var Joomla\Registry\Registry $params */
 /* @var Joomla\Application\ $app */
-/* @var array $entryStructure */
 /* @var array $entry */
 /* @var string $originalUrl */
 /* @var bool $displayBackToList */
@@ -24,16 +23,26 @@ defined('_JEXEC') or die;
 /* @var ?array $next */
 /* @var ?array $prev */
 
+
+$entryId = $entry[QltodoTable::COLUMN_ID];
 ?>
 <div class="entry">
-    <?php foreach ($entryStructure as $column => $columInfo) : ?>
-        <div class="column">
-            <?php if (!empty($columInfo['label'])) : ?>
-                <strong class="column label-<?= $column ?>"><?= $columInfo['label'] ?></strong>
-            <?php endif; ?>
-            <span class="value <?= $column ?>"><?= $entry[$column] ?? '' ?></span>
-        </div>
-    <?php endforeach;?>
+    <div class="<?= QltodoTable::COLUMN_ID ?>"><?= $entry[QltodoHelper::COLUMN_ID] ?></div>
+    <div class="<?= QltodoTable::COLUMN_DESCRIPTION ?>"><?= $entry[QltodoTable::COLUMN_DESCRIPTION] ?></div>
+    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_TITLE ?>"><?= $entry[QltodoTable::COLUMN_MENU_ITEM_TITLE] ?></div>
+    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_ID ?>"><?= $entry[QltodoTable::COLUMN_MENU_ITEM_ID] ?></div>
+    <div class="<?= QltodoTable::COLUMN_STATE ?>"><?= $entry[QltodoTable::COLUMN_STATE] ?></div>
+    <div class="<?= QltodoTable::COLUMN_WORKFLOW ?>"><?= $entry[QltodoTable::COLUMN_WORKFLOW] ?></div>
+    <div class="<?= QltodoTable::COLUMN_SEVERITY ?>"><?= $entry[QltodoTable::COLUMN_SEVERITY] ?></div>
+    <form method="post">
+        <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_SAVE ?>" value="1"/>
+        <input type="submit" class="btn btn-primary" value="<?= $entryId ? Text::_('JACTION_EDIT') : Text::_('JACTION_CREATE') ?>" />
+    </form>
+    <form method="post">
+        <input type="hidden" name="<?= QltodoHelper::FORM_ID ?>" value="<?= $entryId ?>" />
+        <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_DELETE ?>" value="delete" />
+        <input type="submit" class="btn btn-primary" value="<?= Text::_('JACTION_DELETE') ?>" />
+    </form>
     <div class="navigation d-flex justify-content-between">
     <?php if ($displayNavigation) : ?>
         <?php if (is_null($prev)) : ?>

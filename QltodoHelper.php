@@ -29,9 +29,11 @@ class QltodoHelper
     const QLTODO_URL = 'url';
     const URL_SCHEME = '%s://%s%s';
 
+    const COLUMN_ID = 'id';
+    const FORM_ID = 'qltodo_id';
     const FORM_ACTION_SAVE = 'qltodo_save';
     const FORM_ACTION_LOAD = 'qltodo_load';
-    const FORM_ACTION_REMOVE = 'qltodo_remove';
+    const FORM_ACTION_DELETE = 'qltodo_delete';
     const FORM_ACTION_UPDATE = 'qltodo_update';
     const FORM_TITLE = 'qltodo_title';
     const FORM_DESCRIPTION = 'qltodo_description';
@@ -60,9 +62,9 @@ class QltodoHelper
         }
     }
 
-    public function addQltodo(ParameterBag $request)
+    public function createQltodo(ParameterBag $request)
     {
-        $this->qltodoTable->addQltodo(
+        $this->qltodoTable->createQltodo(
             $request->getString(static::FORM_TITLE, ''),
             $request->getString(static::FORM_DESCRIPTION, ''),
             $request->getString(static::FORM_MENUITEMTITLE, ''),
@@ -84,12 +86,10 @@ class QltodoHelper
         return $this->qltodoTable->getEntryById($id);
     }
 
-    public function updateQltodo(int $id)
+    public function updateQltodo(int $id, array $data): array
     {
-        $data = [
-
-        ];
         $this->qltodoTable->updateQltodo($id, $data);
+        return $this->qltodoTable->getEntryById($id);
     }
 
     public function getData(): array

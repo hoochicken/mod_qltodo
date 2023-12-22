@@ -20,15 +20,16 @@ defined('_JEXEC') or die;
 <ul class="">
     <?php foreach ($data as $k => $entry) : ?>
         <li class="item">
-            <strong><?= $entry['title'] ?? '' ?> (<?= $entry['id'] ?? '' ?>) </strong><br />
-            <?php if (!empty($entry['item_menu_title'] ?? '')) : ?>
-                <a href="#" class="item_menu_title"><?= $entry['item_menu_title'] ?></a><br />
-            <?php endif; ?>
-            <?php if (!empty($entry['description'] ?? '')) : ?>
-                <span class="description"><?= $entry['description'] ?? '' ?></span>
-            <?php endif; ?>
-
-            <?php // print_r($entry); ?>
+            <form method="post" action="<?= $entry['page_url'] ?>">
+                <strong><?= $entry['title'] ?? '' ?> (<?= $entry['id'] ?? '' ?>)</strong><br />
+                <input class="btn btn-secondary" type="submit" value="Fix it" /><br />
+                <a href="<?= $entry['page_url'] ?>" class="item_menu_title"><?= $entry['item_menu_title'] ?? $entry['page_url'] ?></a><br />
+                <?php if (!empty($entry['description'] ?? '')) : ?>
+                    <span class="description"><?= $entry['description'] ?? '' ?></span>
+                <?php endif; ?>
+                <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_LOAD ?>" value="1" />
+                <input name="<?= QltodoHelper::FORM_ID ?>" value="<?= $entry['id'] ?>" type="hidden" />
+            </form>
         </li>
     <?php endforeach; ?>
 </ul>

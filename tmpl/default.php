@@ -22,6 +22,7 @@ $wa->registerAndUseStyle('qltodo', 'mod_qltodo/styles.css');
 /* @var array $data */
 /* @var array $errores */
 /* @var bool $displayEntry */
+/* @var bool $displayForm */
 /* @var bool $displayList */
 ?>
 
@@ -38,7 +39,7 @@ $wa->registerAndUseStyle('qltodo', 'mod_qltodo/styles.css');
              $errores = array_column($errores->getErrors(), QltodoError::ATTR_MESSAGE);
              echo sprintf('<div class="alert alert-info">%s</div>', implode('<br />', $errores));
          }
-         require ModuleHelper::getLayoutPath('mod_qltodo', 'default_form');
+         if ($displayForm) require ModuleHelper::getLayoutPath('mod_qltodo', 'default_form');
          if ($displayEntry) require ModuleHelper::getLayoutPath('mod_qltodo', 'default_entry');
          if ($displayList) {
              require ModuleHelper::getLayoutPath('mod_qltodo', 'default_list');
