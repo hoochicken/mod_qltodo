@@ -20,6 +20,8 @@ require_once __DIR__ . '/QltodoHelper.php';
 require_once __DIR__ . '/php/classes/QltodoError.php';
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/php/classes/QltodoTable.php';
+require_once __DIR__ . '/php/classes/QltodoSeverity.php';
+require_once __DIR__ . '/php/classes/QltodoEntry.php';
 
 /** @var stdClass $module */
 /** @var \Joomla\Registry\Registry $params */
@@ -39,8 +41,8 @@ try {
     $displayList = $params->get('displayList', true);
     $displayEntry = false;
     $displayBackToList = false;
-    $entryId = 0;
-    $entry = [];
+    $entry = new QltodoEntry();
+    $entryData = [];
 
     // create
     if ($request->getString(QltodoHelper::FORM_ACTION_SAVE, 0)) {
@@ -54,22 +56,23 @@ try {
 
     // load
     if ($request->getString(QltodoHelper::FORM_ACTION_LOAD, 0)) {
-        $entry = $helper->getEntryById($request->getString(QltodoHelper::FORM_ID, 0));
-        $entryId = $entry[QltodoTable::COLUMN_ID];
+        $entryData = $helper->getEntryById($request->getString(QltodoHelper::FORM_ID, 0));
+        $entry->setMultiple($entryData);
         $displayEntry = true;
     }
 
     // load
     if ($request->getString(QltodoHelper::FORM_ACTION_UPDATE, 0)) {
         $data = [];
-        $entry = $helper->updateQltodo($request->getString(QltodoHelper::FORM_ID), $data);
-        $entryId = $entry[QltodoTable::COLUMN_ID];
+        $entryData = $helper->updateQltodo($request->getString(QltodoHelper::FORM_ID), $data);
+        $entry->setMultiple($entryData);
     }
 
+    $helper->qltodoTable->setWhere('');
     $data = $helper->getData();
-
-    $prev = $helper->getPrev($data, $entry, $params->get('identColumn', 'id'));
-    $next = $helper->getNext($data, $entry, $params->get('identColumn', 'id'));
+    $prev = $helper->getPrev($data, $entryData, $params->get('identColumn', 'id'));
+    $next = $helper->getNext($data, $entryData, $params->get('identColumn', 'id'));
+    array_walk($data, function(&$item) { $item = new QltodoEntry($item); });
 
     $displayForm = !$displayEntry;
 

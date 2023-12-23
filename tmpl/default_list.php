@@ -16,19 +16,20 @@ defined('_JEXEC') or die;
 /* @var array $columns */
 /* @var array $data */
 /* @var Joomla\Application\ $app */
+/* @var QltodoEntry $entry */
 ?>
 <ul class="">
-    <?php foreach ($data as $k => $entry) : ?>
+    <?php foreach ($data as $k => $singleEntry) : ?>
         <li class="item">
-            <form method="post" action="<?= $entry['page_url'] ?>">
-                <strong><?= $entry['title'] ?? '' ?> (<?= $entry['id'] ?? '' ?>)</strong><br />
+            <form method="post" action="<?= $singleEntry->getPageUrl() ?>">
+                <strong><?= $singleEntry->getTitle() ?> (<?= $singleEntry->getId(); ?>)</strong><br />
                 <input class="btn btn-secondary" type="submit" value="Fix it" /><br />
-                <a href="<?= $entry['page_url'] ?>" class="item_menu_title"><?= $entry['item_menu_title'] ?? $entry['page_url'] ?></a><br />
-                <?php if (!empty($entry['description'] ?? '')) : ?>
-                    <span class="description"><?= $entry['description'] ?? '' ?></span>
+                <a href="<?= $singleEntry->getPageUrl() ?>" class="item_menu_title"><?= $singleEntry->getMenuItemTitle() ?? $singleEntry->getPageUrl() ?></a><br />
+                <?php if (!empty($singleEntry->getDescription())) : ?>
+                    <span class="description"><?= $singleEntry->getDescription() ?></span>
                 <?php endif; ?>
                 <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_LOAD ?>" value="1" />
-                <input name="<?= QltodoHelper::FORM_ID ?>" value="<?= $entry['id'] ?>" type="hidden" />
+                <input name="<?= QltodoHelper::FORM_ID ?>" value="<?= $singleEntry->getId() ?>" type="hidden" />
             </form>
         </li>
     <?php endforeach; ?>

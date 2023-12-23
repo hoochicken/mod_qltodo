@@ -24,6 +24,7 @@ $wa->registerAndUseStyle('qltodo', 'mod_qltodo/styles.css');
 /* @var bool $displayEntry */
 /* @var bool $displayForm */
 /* @var bool $displayList */
+/* @var QltodoEntry $entry */
 ?>
 
 <div class="qltodo <?= $params->get('shape', 'round') === 'round' ? 'round' : 'rectangular' ?>"

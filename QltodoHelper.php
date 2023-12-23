@@ -112,6 +112,9 @@ class QltodoHelper
 
     public function getPrev(array $data, ?array $entry, string $identColumn): ?array
     {
+        if (is_null($entry)) {
+            return null;
+        }
         $keyPrev = null;
         $identEntry = $this->getIdentFromEntry($entry, $identColumn);
         foreach ($data as $key => $item) {
@@ -128,6 +131,9 @@ class QltodoHelper
 
     public function getNext(array $data, ?array $entry, string $identColumn): ?array
     {
+        if (is_null($entry)) {
+            return null;
+        }
         $keyNext = null;
         $next = false;
         $identEntry = $this->getIdentFromEntry($entry, $identColumn);

@@ -16,30 +16,28 @@ defined('_JEXEC') or die;
 /* @var stdClass $module */
 /* @var Joomla\Registry\Registry $params */
 /* @var Joomla\Application\ $app */
-/* @var array $entry */
+/* @var QltodoEntry $entry */
 /* @var string $originalUrl */
 /* @var bool $displayBackToList */
 /* @var bool $displayNavigation */
 /* @var ?array $next */
 /* @var ?array $prev */
 
-
-$entryId = $entry[QltodoTable::COLUMN_ID];
 ?>
 <div class="entry">
-    <div class="<?= QltodoTable::COLUMN_ID ?>"><?= $entry[QltodoHelper::COLUMN_ID] ?></div>
-    <div class="<?= QltodoTable::COLUMN_DESCRIPTION ?>"><?= $entry[QltodoTable::COLUMN_DESCRIPTION] ?></div>
-    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_TITLE ?>"><?= $entry[QltodoTable::COLUMN_MENU_ITEM_TITLE] ?></div>
-    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_ID ?>"><?= $entry[QltodoTable::COLUMN_MENU_ITEM_ID] ?></div>
-    <div class="<?= QltodoTable::COLUMN_STATE ?>"><?= $entry[QltodoTable::COLUMN_STATE] ?></div>
-    <div class="<?= QltodoTable::COLUMN_WORKFLOW ?>"><?= $entry[QltodoTable::COLUMN_WORKFLOW] ?></div>
-    <div class="<?= QltodoTable::COLUMN_SEVERITY ?>"><?= $entry[QltodoTable::COLUMN_SEVERITY] ?></div>
+    <div class="<?= QltodoTable::COLUMN_ID ?>"><?= $entry->getId() ?></div>
+    <div class="<?= QltodoTable::COLUMN_DESCRIPTION ?>"><?= $entry->getDescription() ?></div>
+    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_TITLE ?>"><?= $entry->getMenuItemTitle() ?></div>
+    <div class="<?= QltodoTable::COLUMN_MENU_ITEM_ID ?>"><?= $entry->getMenuItemId() ?></div>
+    <div class="<?= QltodoTable::COLUMN_STATE ?>"><?= $entry->getState() ?></div>
+    <div class="<?= QltodoTable::COLUMN_WORKFLOW ?>"><?= $entry->getWorkflow() ?></div>
+    <div class="<?= QltodoTable::COLUMN_SEVERITY ?>"><?= $entry->getSeverity() ?></div>
     <form method="post">
         <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_SAVE ?>" value="1"/>
-        <input type="submit" class="btn btn-primary" value="<?= $entryId ? Text::_('JACTION_EDIT') : Text::_('JACTION_CREATE') ?>" />
+        <input type="submit" class="btn btn-primary" value="<?= $entry->getId() ? Text::_('JACTION_EDIT') : Text::_('JACTION_CREATE') ?>" />
     </form>
     <form method="post">
-        <input type="hidden" name="<?= QltodoHelper::FORM_ID ?>" value="<?= $entryId ?>" />
+        <input type="hidden" name="<?= QltodoHelper::FORM_ID ?>" value="<?= $entry->getId() ?>" />
         <input type="hidden" name="<?= QltodoHelper::FORM_ACTION_DELETE ?>" value="delete" />
         <input type="submit" class="btn btn-primary" value="<?= Text::_('JACTION_DELETE') ?>" />
     </form>
