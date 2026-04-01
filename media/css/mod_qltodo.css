@@ -1,0 +1,36 @@
+/**
+ * mod_qltodo
+ *
+ * @copyright  Copyright (C) 2025. All rights reserved.
+ * @license    GNU General Public License version 2 or later;
+ */
+
+.mod_qltodo {
+    /* Add your custom CSS styles here */
+    display: block;
+    margin: 0;
+    padding: 1rem;
+}
+
+/* Example responsive styles */
+@media (max-width: 768px) {
+    .mod_qltodo {
+        padding: 0.5rem;
+    }
+}
+
+/* Example custom classes */
+.mod_qltodo__title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.mod_qltodo__content {
+    line-height: 1.5;
+}
+
+.mod_qltodo__footer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
