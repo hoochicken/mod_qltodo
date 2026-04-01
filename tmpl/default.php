@@ -10,16 +10,16 @@ defined('_JEXEC') or die;
 
 use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
 
-/** @var ?ParametersCustom $displayData */
+/** @var ?\Hoochicken\Module\Qltodo\Site\Helper\DisplayData $displayData */
 ?>
 
-<<?= $displayData->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $displayData->getModuleClassSuffix(); ?>">
-    <?php if ($displayData->displayTitle()) : ?>
-        <<?= $displayData->getTitleTag() ?>>
-            <?= $displayData->getTitle() ?>
-        </<?= $displayData->getTitleTag() ?>>
+<<?= $displayData->getParams()->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $displayData->getParams()->getModuleClassSuffix(); ?>">
+    <?php if ($displayData->getParams()->displayTitle()) : ?>
+        <<?= $displayData->getParams()->getTitleTag() ?>>
+            <?= $displayData->getParams()->getTitle() ?>
+        </<?= $displayData->getParams()->getTitleTag() ?>>
     <?php endif; ?>
     <div class="module-content">
-        <?= $displayData->getMessage(); ?>
+        <?= $displayData->getParams()->getMessage(); ?>
     </div>
-</<?= $displayData->getModuleTag() ?>>
+</<?= $displayData->getParams()->getModuleTag() ?>>

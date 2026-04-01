@@ -12,7 +12,7 @@ interface DisplayDataInterface
 {
     public function toArray(): array;
 
-    public function getParams(): ParametersCustomInterface;
+    public function getParams(): ParametersCustom;
 
     public function setMessage(?string $message): void;
 }

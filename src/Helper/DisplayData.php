@@ -33,7 +33,7 @@ class DisplayData implements DisplayDataInterface
         ];
     }
 
-    public function getParams(): ParametersCustomInterface
+    public function getParams(): ParametersCustom
     {
         return $this->params;
     }

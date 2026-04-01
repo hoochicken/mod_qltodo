@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => null,
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => null,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'hoochicken/datagrid' => array(
+            'pretty_version' => 'v1.0.5',
+            'version' => '1.0.5.0',
+            'reference' => '7a7a8829b0085c7c8ef798327fc83a21e4d5daee',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../hoochicken/datagrid',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'hoochicken/dbtable' => array(
+            'pretty_version' => 'v1.0.4',
+            'version' => '1.0.4.0',
+            'reference' => 'cfadda7c05f4687ff786bd3aca6ea03fe29dcc71',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../hoochicken/dbtable',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

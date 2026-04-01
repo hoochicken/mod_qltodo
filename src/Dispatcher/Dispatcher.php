@@ -33,14 +33,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         try {
             $this->loadLanguage();
 
-            $displayData = $this->getLayoutData();
-            if ($this->isProperDisplayCustom($displayData)) {
-                return;
-            }
-
-            /** @var ParametersCustom $displayData */
-            $displayData = $displayData['data'] ?? null;
-            require ModuleHelper::getLayoutPath('mod_qltodo', $displayData->getLayout());
+            $displayData = $this->getLayoutDataRaw();
+            $path = ModuleHelper::getLayoutPath('mod_qltodo', $displayData->getParams()->getLayout());
+            require $path;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
