@@ -25,6 +25,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 {
     use HelperFactoryAwareTrait;
 
+    private const HELPER_NAME = 'QltodoHelper';
     private ?Registry $params = null;
 
     public function dispatch()
@@ -50,7 +51,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         return empty($displayData) || !isset($displayData['data']) || ParametersCustom::class !== get_class($displayData['data']);
     }
 
-    protected function getLayoutData()
+    protected function getLayoutData(): array
     {
         try {
             $data = parent::getLayoutData();
@@ -59,7 +60,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $displayModel = $this->getLayoutDataRaw();
             return $displayModel->toArray();
         } catch (Exception $e) {
-            return $e->getMessage();
+            return ['msg' => $e->getMessage()];
         }
     }
 
@@ -69,7 +70,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $this->params = new Registry($data['params']);
 
         /** @var QltodoHelper $helper */
-        $helper = $this->getHelperFactory()->getHelper(QltodoHelper::class);
+        $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME);
 
         $params = new ParametersCustom($this->params ?? null, $this->module);
         $displayData = new DisplayData($params);

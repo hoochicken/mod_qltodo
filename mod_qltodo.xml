@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>MOD_QLTODO_TITLE</name>
-    <creationDate>2025-02-28</creationDate>
+    <creationDate>2026-04-01</creationDate>
     <author>Mareike Riegel</author>
     <authorEmail>info@ql.de</authorEmail>
     <authorUrl>https://ql.de</authorUrl>
-    <copyright>Copyright (C) 2025 Mareike Riegel. All rights reserved.</copyright>
+    <copyright>Copyright (C) 2026 Mareike Riegel. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later;</license>
     <version>1.0.0</version>
     <description><![CDATA[MOD_QLTODO_XML_DESCRIPTION]]></description>
@@ -23,6 +23,7 @@
     </files>
     
     <media destination="mod_qltodo" folder="media">
+        <filename>joomla.asset.json</filename>
         <filename>css/mod_qltodo.css</filename>
         <filename>js/mod_qltodo.js</filename>
     </media>

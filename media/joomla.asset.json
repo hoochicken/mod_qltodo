@@ -1,0 +1,26 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "mod_qltodo",
+  "version": "1.0.0",
+  "description": "ModQlxxxxx",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "mod_qltodo.script",
+      "type": "script",
+      "uri": "mod_qltodo/script.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "name": "mod_qltodo.style",
+      "type": "style",
+      "uri": "mod_qltodo/style.css"
+    }
+  ]
+}

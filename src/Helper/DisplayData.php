@@ -11,8 +11,6 @@ namespace Hoochicken\Module\Qltodo\Site\Helper;
 use Joomla\Registry\Registry;
 use stdClass;
 
-require_once __DIR__ . '/ParametersCustomInterface.php';
-
 class DisplayData implements DisplayDataInterface
 {
     private ParametersCustomInterface $params;

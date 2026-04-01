@@ -16,37 +16,14 @@ use Joomla\DI\ServiceProviderInterface;
 
 return new class() implements ServiceProviderInterface
 {
-    const PHP_VERSION_NAMESPACE = '8.4.0';
+    private const MODULE_NAME = 'Qltodo';
+    private const MODULE_NAMESPACE_BASIC = '\\Hoochicken\\Module\\' . self::MODULE_NAME;
+    private const MODULE_NAMESPACE_HELPER = self::MODULE_NAMESPACE_BASIC . '\\Site\\Helper';
 
     public function register(Container $container)
     {
-        static::requireOnceIfPhpDoesNotKnowamespaces();
-
-        $container->registerServiceProvider(new ModuleDispatcherFactory('\Hoochicken\Module\Qltodo'));
-        $container->registerServiceProvider(new HelperFactory('\Hoochicken\Module\Qltodo\Site\Helper'));
+        $container->registerServiceProvider(new ModuleDispatcherFactory(self::MODULE_NAMESPACE_BASIC));
+        $container->registerServiceProvider(new HelperFactory(self::MODULE_NAMESPACE_HELPER));
         $container->registerServiceProvider(new Module());
-    }
-
-    private static function requireOnceIfPhpDoesNotKnowamespaces(): void
-    {
-        if (static::checkPhpVersionKnowsNamesspaces()) {
-            return;
-        }
-
-        require_once __DIR__ . '/../src/Dispatcher/Dispatcher.php';
-        require_once __DIR__ . '/../src/Helper/DisplayData.php';
-        require_once __DIR__ . '/../src/Helper/DisplayDataInterface.php';
-        require_once __DIR__ . '/../src/Helper/ParametersBasic.php';
-        require_once __DIR__ . '/../src/Helper/ParametersBasicInterface.php';
-        require_once __DIR__ . '/../src/Helper/ParametersCustom.php';
-        require_once __DIR__ . '/../src/Helper/ParametersCustomInterface.php';
-        require_once __DIR__ . '/../src/Helper/MessageItem.php';
-        require_once __DIR__ . '/../src/Helper/MessageCollection.php';
-    }
-
-    private static function checkPhpVersionKnowsNamesspaces(): bool
-    {
-        $phpVersion = phpversion();
-        return (version_compare($phpVersion, static::PHP_VERSION_NAMESPACE, '>='));
     }
 };
