@@ -8,30 +8,14 @@
 
 namespace Hoochicken\Module\Qltodo\Site\Helper;
 
-class MessageCollection
+class MessageCollection extends AbstractCollection
 {
-    /** @var MessageItem[] */
-    private array $items = [];
-
-    public function add(MessageItem $message): void
+    public function add($item): void
     {
-        $this->items[] = $message;
-    }
-
-    /**
-     * @param MessageItem[] $messages
-     */
-    public function set(array $messages): void
-    {
-        $this->items = $messages;
-    }
-
-    /**
-     * @return MessageItem[]
-     */
-    public function get(): array
-    {
-        return $this->items;
+        if (!$item instanceof MessageItem) {
+            return;
+        }
+        parent::add($item);
     }
 
     public function hasErrors(): bool
