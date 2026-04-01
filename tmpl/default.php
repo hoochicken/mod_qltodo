@@ -8,18 +8,18 @@
 
 defined('_JEXEC') or die;
 
-use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
-
 /** @var ?\Hoochicken\Module\Qltodo\Site\Helper\DisplayData $displayData */
+
+$params = $displayData->getParams();
 ?>
 
-<<?= $displayData->getParams()->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $displayData->getParams()->getModuleClassSuffix(); ?>">
-    <?php if ($displayData->getParams()->displayTitle()) : ?>
-        <<?= $displayData->getParams()->getTitleTag() ?>>
-            <?= $displayData->getParams()->getTitle() ?>
-        </<?= $displayData->getParams()->getTitleTag() ?>>
+<<?= $params->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $params->getModuleClassSuffix(); ?>">
+    <?php if ($params->displayTitle()) : ?>
+        <<?= $params->getTitleTag() ?>>
+            <?= $params->getTitle() ?>
+        </<?= $params->getTitleTag() ?>>
     <?php endif; ?>
     <div class="module-content">
-        <?= $displayData->getParams()->getMessage(); ?>
+        <?= $params->getMessage(); ?>
     </div>
-</<?= $displayData->getParams()->getModuleTag() ?>>
+</<?= $params->getModuleTag() ?>>
