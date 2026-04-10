@@ -106,11 +106,17 @@ class QltodoRepository extends Database
         $this->updateEntries($data, sprintf('id = %s', $id));
     }
 
+    /**
+     * @param array $selector
+     * @param int $limit
+     * @return TodoItem[]
+     */
     public function getData(array $selector = [], int $limit = 1000): array
     {
         $selector = !empty($selector)
             ? $selector
             : [
+                static::COLUMN_ID,
                 static::COLUMN_TITLE,
                 static::COLUMN_DESCRIPTION,
                 static::COLUMN_MENU_ITEM_TITLE,
@@ -125,11 +131,14 @@ class QltodoRepository extends Database
         return array_map(fn($item) => $this->convertToTodoItem($item), $data);
     }
 
-    public function getEntryById(int $id): array
+    public function getEntryById(int $id): TodoItem
     {
         $this->setWhere(sprintf('id = %s', $id));
         $data = parent::getData([], 1);
-        return $data[0] ?? [];
+        if (empty($data)) {
+            return [];
+        }
+        return $this->convertToTodoItem($data[0]);
     }
 
     public function getTable(): string
@@ -140,10 +149,13 @@ class QltodoRepository extends Database
     private function convertToTodoItem($item): TodoItem
     {
         $todoItem = new TodoItem();
+        $todoItem->id = (int) ($item['id'] ?? 0);
         $todoItem->title = $item['title'];
         $todoItem->description = $item['description'];
-        $todoItem->created_at = new DateTimeImmutable($item['created_at']);
-        $todoItem->severity = new SeverityItem($item['severity']);
+        $todoItem->page_url = (string) ($item['page_url'] ?? '');
+        $todoItem->state = (int) ($item['state'] ?? 1);
+        $todoItem->created_at = !empty($item['created_at']) ? new DateTimeImmutable($item['created_at']) : null;
+        $todoItem->severity = new SeverityItem((int) ($item['severity'] ?? 1));
         return $todoItem;
     }
 }

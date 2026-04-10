@@ -13,6 +13,9 @@ defined('_JEXEC') or die;
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
 
-if ($displayData->isDisplayTypeList()) {
-    require 'default_list.php';
-}
+if ($displayData->isDisplayTypeForm()) {
+    require 'default_form.php';
+    return;
+} 
+
+require 'default_list.php';

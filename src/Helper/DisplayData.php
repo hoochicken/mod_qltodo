@@ -8,20 +8,22 @@
 
 namespace Hoochicken\Module\Qltodo\Site\Helper;
 
+use Algo26\IdnaConvert\ToIdn;
 use Joomla\Registry\Registry;
 use stdClass;
 
 class DisplayData implements DisplayDataInterface
 {
     private const DISPLAY_TYPE_LIST = 'list';
-    private const DISPLAY_TYPE_DETAIL = 'detail';
+    private const DISPLAY_TYPE_FORM = 'detail';
     private const DISPLAY_TYPE_DEFAULT = self::DISPLAY_TYPE_LIST;
 
-    private const DISPLAY_TYPES_ALL  = [self::DISPLAY_TYPE_LIST, self::DISPLAY_TYPE_DETAIL];
+    private const DISPLAY_TYPES_ALL  = [self::DISPLAY_TYPE_LIST, self::DISPLAY_TYPE_FORM];
 
     private string $displayType = self::DISPLAY_TYPE_DEFAULT;
     private ParametersCustomInterface $params;
     private array $qltodoEntries = [];
+    private ?TodoItem $qltodoEntry = null;
 
     public function __construct(ParametersCustomInterface $params)
     {
@@ -61,11 +63,9 @@ class DisplayData implements DisplayDataInterface
         return $this->qltodoEntries;
     }
 
-    public function setDisplayType(string $displayType): string
+    public function setDisplayForm(): void
     {
-        $this->displayType = static::existsDisplayType($displayType)
-            ? $displayType
-            : static::DISPLAY_TYPE_DEFAULT;
+        $this->displayType = static::DISPLAY_TYPE_FORM;
     }
 
     public function isDisplayTypeList(): bool
@@ -73,9 +73,9 @@ class DisplayData implements DisplayDataInterface
         return self::DISPLAY_TYPE_LIST === $this->displayType || !static::existsDisplayType($this->displayType);
     }
 
-    public function isDisplayTypeDetail(): bool
+    public function isDisplayTypeForm(): bool
     {
-        return self::DISPLAY_TYPE_DETAIL === $this->displayType;
+        return self::DISPLAY_TYPE_FORM === $this->displayType;
     }
 
     public function getDisplayType(): string
@@ -88,5 +88,15 @@ class DisplayData implements DisplayDataInterface
     private static function existsDisplayType(string $displayType): bool
     {
         return in_array($displayType, static::DISPLAY_TYPES_ALL);
+    }
+
+    public function getQltodoEntry(): ?TodoItem
+    {
+        return $this->qltodoEntry;
+    }
+
+    public function setQltodoEntry(?TodoItem $qltodoEntry): void
+    {
+        $this->qltodoEntry = $qltodoEntry;
     }
 }

@@ -14,34 +14,25 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Database\DatabaseInterface;
-use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 
 class QltodoHelper
 {
 
-    private ?QltodoRepository $qltodoTable = null;
+    private ?QltodoRepository $qltodoRepository = null;
+
+    public function __construct(array $config = [])
+    {
+        $this->qltodoRepository = $config[QltodoRepository::class] ?? null;
+    }
 
     public function getQlTodoEntries(): array
     {
-        // init database table
-        require_once JPATH_BASE . '/modules/mod_qltodo/vendor/autoload.php';
-        $config = Factory::getContainer()->get('config');
-        $this->qltodoTable = $this->getDbTable($config);
-
-        // $this->qltodoTable->create('test', 'description');
-        return $this->qltodoTable->getData();
+        return $this->getQltodoRepository()->getData();
     }
 
-    private function getDbTable(Registry $config): QltodoRepository
+    public function getQlTodoEntryById(int $id): ?TodoItem
     {
-        $tableName = str_replace('#__', $config->get('dbprefix', ''), QltodoRepository::TABLE_NAME);
-        $table = new QltodoRepository($config->get('host', ''), $config->get('db', ''), $config->get('user', ''), $config->get('password', ''), $config->get('port', 3306));
-        $table->setTable($tableName);
-        // $table->create('test' . rand(1,1000), 'description');
-        if ($table->tableExistsQltodo()) {
-            return $table;
-        }
-        return $table->createTableQltodo();
+        return $this->getQltodoRepository()->getEntryById($id);
     }
 
     public function getMessage(Registry $params, $app): string
@@ -81,5 +72,10 @@ class QltodoHelper
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    private function getQltodoRepository(): ?QltodoRepository
+    {
+        return $this->qltodoRepository;
     }
 }
