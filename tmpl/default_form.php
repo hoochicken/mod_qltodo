@@ -51,7 +51,7 @@ $levels = SeverityItem::getLevels();
             ><?= htmlspecialchars($entry->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
         <div class="control-group">
-            <label for="<?= QltodoForm::MODULE_PREFIX ?>_severity"><?= Text::_('COM_MODULES_FIELD_STATUS_LABEL') ?></label>
+            <label for="<?= QltodoForm::MODULE_PREFIX ?>_severity"><?= Text::_('MOD_QLTODO_STATUS_LABEL') ?></label>
             <select id="<?= QltodoForm::MODULE_PREFIX ?>_severity" name="<?= QltodoRepository::COLUMN_SEVERITY ?>">
                 <?php foreach ($levels as $level => $label) : ?>
                     <option value="<?= (int) $level ?>" <?= (int) $severityLevel === (int) $level ? 'selected' : '' ?>>
