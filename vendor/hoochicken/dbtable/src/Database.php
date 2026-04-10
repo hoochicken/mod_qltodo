@@ -130,7 +130,7 @@ abstract class Database
         return $data;
     }
 
-    public function addEntry(array $data)
+    public function addEntry(array $data): int
     {
         $columns = implode(',', array_keys($data));
 
@@ -141,6 +141,7 @@ abstract class Database
         $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', static::getTable(), $columns, $valuesQuestionmarks);
         $statement = $this->getDb()->prepare($sql);
         $statement->execute(array_values($data));
+        return $this->getDb()->lastInsertId();
     }
 
     public function updateEntries(array $data, string $where = '')
