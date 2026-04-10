@@ -12,10 +12,20 @@ defined('_JEXEC') or die;
 
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
-
+?>
+<<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
+<?php if ($params->displayTitle()) : ?>
+    <<?= $params->getTitleTag() ?>>
+    <?= $params->getTitle() ?>
+    </<?= $params->getTitleTag() ?>>
+<?php endif; ?>
+<div class="module-content">
+<?php
 if ($displayData->isDisplayTypeForm()) {
     require 'default_form.php';
-    return;
-} 
-
-require 'default_list.php';
+} else {
+    require 'default_list.php';
+}
+?>
+</div>
+</<?= $params->getModuleTag() ?>>

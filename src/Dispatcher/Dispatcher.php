@@ -48,13 +48,19 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 QltodoRepository::class => $qltodoRepository,
             ]);
 
+            $displayList =
+                0 >= $qltodoId
+                || QltodoForm::isTaskSaveAndClose($qltodoTask)
+                || QltodoForm::isTaskClose($qltodoTask);
+
             if (QltodoForm::isTaskSave($qltodoTask)) {
                 $entry = $helper->getTodoItemFromInput($input);
                 $helper->saveEntry($entry);
+            } elseif (QltodoForm::isTaskDelete($qltodoTask)) {
+                $helper->deleteEntry($qltodoId);
             }
 
-            $closeForm = QltodoForm::isTaskSaveAndClose($qltodoTask);
-            $displayData = $this->getLayoutDataAdvanced($helper, $qltodoId, $closeForm);
+            $displayData = $this->getLayoutDataAdvanced($helper, $qltodoId, $displayList);
             $path = ModuleHelper::getLayoutPath('mod_qltodo', $displayData->getParams()->getLayout());
             require $path;
         } catch (Exception $e) {
@@ -89,7 +95,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         }
     }
 
-    protected function getLayoutDataAdvanced(QltodoHelper $helper, int $qltodoId = 0, bool $closeForm = true): DisplayDataInterface
+    protected function getLayoutDataAdvanced(QltodoHelper $helper, int $qltodoId = 0, bool $displayList = true): DisplayDataInterface
     {
         $data = parent::getLayoutData();
         $this->params = new Registry($data['params']);
@@ -98,7 +104,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         // create display data object
         $displayData = new DisplayData($params);
         $displayData->setMessage($helper->getMessage($this->params, $this->getApplication()));
-        if (0 < $qltodoId && !$closeForm) {
+        if (0 < $qltodoId && !$displayList) {
             // single entry given by get params
             $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : null;
             $displayData->setDisplayForm();

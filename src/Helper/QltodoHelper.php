@@ -83,6 +83,11 @@ class QltodoHelper
         return $this->qltodoRepository->getEntryById($id);
     }
 
+    public function deleteEntry(int $id): void
+    {
+        $this->qltodoRepository->delete($id);
+    }
+
     public function createEntry(TodoItem $entry): int
     {
         return $this->qltodoRepository->create($entry->title, $entry->description);

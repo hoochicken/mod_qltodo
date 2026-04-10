@@ -11,6 +11,7 @@ use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -71,14 +72,13 @@ $entries = array_map(function ($item) use ($returnUrl) {
 $datagrid = new DataGrid();
 ?>
 
-<<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
-<?php if ($params->displayTitle()) : ?>
-    <<?= $params->getTitleTag() ?>>
-    <?= $params->getTitle() ?>
-    </<?= $params->getTitleTag() ?>>
-<?php endif; ?>
-<div class="module-content">
-    <?= $datagrid->getTable($entries, $columns) ?>
-    <?= $params->getMessage() ?>
-</div>
-</<?= $params->getModuleTag() ?>>
+<?= $datagrid->getTable($entries, $columns) ?>
+<?= $params->getMessage() ?>
+
+
+<form method="post" class="form-validate">
+    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>" class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
+    <?= HTMLHelper::_('form.token') ?>
+</form>
+
+
