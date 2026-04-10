@@ -40,4 +40,9 @@ class SeverityItem
     {
         return static::$levels[$level] ?? '';
     }
+
+    public static function getLevels(): array
+    {
+        return static::$levels;
+    }
 }

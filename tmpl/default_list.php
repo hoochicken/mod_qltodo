@@ -8,6 +8,7 @@
 
 use Hoochicken\Datagrid\Datagrid;
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
+use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
 use Joomla\CMS\Language\Text;
@@ -36,8 +37,26 @@ $entries = array_map(function ($item) use ($returnUrl) {
     $id = (int)$item['id'] ?? 0;
     $baseUrl = (string) ($item[QltodoRepository::COLUMN_PAGE_URL] ?? '');
     $separator = str_contains($baseUrl, '?') ? '&' : '?';
-    $editUrl = sprintf('%s%sqltodotask=todo.edit&qltodoid=%d', $baseUrl, $separator, $id);
-    $deleteUrl = sprintf('%s%sqltodotask=todo.delete&qltodoid=%d', $baseUrl, $separator, $id);
+    $editUrl = sprintf(
+        '%s%s%s=%s&%s=%d&return=%s',
+        $baseUrl,
+        $separator,
+        QltodoForm::PARAM_TODO_TASK,
+        QltodoForm::TASK_EDIT,
+        QltodoForm::PARAM_TODO_ID,
+        $id,
+        $returnUrl
+    );
+    $deleteUrl = sprintf(
+        '%s%s%s=%s&%s=%d&return=%s',
+        $baseUrl,
+        $separator,
+        QltodoForm::PARAM_TODO_TASK,
+        QltodoForm::TASK_DELETE,
+        QltodoForm::PARAM_TODO_ID,
+        $id,
+        $returnUrl
+    );
 
     $item['edit'] = sprintf('<a href="%s" class="btn btn-secondary btn-sm">%s</a>', $editUrl, Text::_('JACTION_EDIT'));
     $item['delete'] = sprintf(
@@ -53,7 +72,7 @@ $entries = array_map(function ($item) use ($returnUrl) {
 $datagrid = new DataGrid();
 ?>
 
-<<?= $params->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $params->getModuleClassSuffix(); ?>">
+<<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
 <?php if ($params->displayTitle()) : ?>
     <<?= $params->getTitleTag() ?>>
     <?= $params->getTitle() ?>

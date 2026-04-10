@@ -7,6 +7,7 @@
  */
 
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
+use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Hoochicken\Module\Qltodo\Site\Helper\SeverityItem;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
@@ -19,9 +20,10 @@ defined('_JEXEC') or die;
 $params = $displayData->getParams();
 $entry = $displayData->getQltodoEntry();
 $severityLevel = $entry->severity?->level ?? SeverityItem::SEVERITY_LOW_VALUE;
+$levels = SeverityItem::getLevels();
 ?>
 
-<<?= $params->getModuleTag() ?> class="<?php echo 'mod_qltodo ' . $params->getModuleClassSuffix(); ?>">
+<<?= $params->getModuleTag() ?> class="<?php echo QltodoForm::MODULE_PREFIX . ' ' . $params->getModuleClassSuffix(); ?>">
 <?php if ($params->displayTitle()) : ?>
     <<?= $params->getTitleTag() ?>>
     <?= $params->getTitle() ?>
@@ -30,9 +32,9 @@ $severityLevel = $entry->severity?->level ?? SeverityItem::SEVERITY_LOW_VALUE;
 <div class="module-content">
     <form method="post" class="form-validate">
         <div class="control-group">
-            <label for="mod_qltodo_title"><?= Text::_('JGLOBAL_TITLE') ?></label>
+            <label for="<?= QltodoForm::MODULE_PREFIX ?>_title"><?= Text::_('JGLOBAL_TITLE') ?></label>
             <input
-                id="mod_qltodo_title"
+                id="<?= QltodoForm::MODULE_PREFIX ?>_title"
                 name="<?= QltodoRepository::COLUMN_TITLE ?>"
                 type="text"
                 class="required"
@@ -41,34 +43,24 @@ $severityLevel = $entry->severity?->level ?? SeverityItem::SEVERITY_LOW_VALUE;
             />
         </div>
         <div class="control-group">
-            <label for="mod_qltodo_description"><?= Text::_('JGLOBAL_DESCRIPTION') ?></label>
+            <label for="<?= QltodoForm::MODULE_PREFIX ?>_description"><?= Text::_('JGLOBAL_DESCRIPTION') ?></label>
             <textarea
-                id="mod_qltodo_description"
+                id="<?= QltodoForm::MODULE_PREFIX ?>_description"
                 name="<?= QltodoRepository::COLUMN_DESCRIPTION ?>"
                 rows="4"
             ><?= htmlspecialchars($entry->description, ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
         <div class="control-group">
-            <label for="mod_qltodo_severity"><?= Text::_('COM_MODULES_FIELD_STATUS_LABEL') ?></label>
-            <select id="mod_qltodo_severity" name="<?= QltodoRepository::COLUMN_SEVERITY ?>">
-                <option value="<?= SeverityItem::SEVERITY_LOW_VALUE ?>" <?= $severityLevel === SeverityItem::SEVERITY_LOW_VALUE ? 'selected' : '' ?>>
-                    <?= Text::_(SeverityItem::SEVERITY_LOW_LABEL) ?>
-                </option>
-                <option value="<?= SeverityItem::SEVERITY_MINOR_VALUE ?>" <?= $severityLevel === SeverityItem::SEVERITY_MINOR_VALUE ? 'selected' : '' ?>>
-                    <?= Text::_(SeverityItem::SEVERITY_MINOR_LABEL) ?>
-                </option>
-                <option value="<?= SeverityItem::SEVERITY_MAJOR_VALUE ?>" <?= $severityLevel === SeverityItem::SEVERITY_MAJOR_VALUE ? 'selected' : '' ?>>
-                    <?= Text::_(SeverityItem::SEVERITY_MAJOR_LABEL) ?>
-                </option>
-                <option value="<?= SeverityItem::SEVERITY_CRITICAL_VALUE ?>" <?= $severityLevel === SeverityItem::SEVERITY_CRITICAL_VALUE ? 'selected' : '' ?>>
-                    <?= Text::_(SeverityItem::SEVERITY_CRITICAL_LABEL) ?>
-                </option>
-                <option value="<?= SeverityItem::SEVERITY_URGENT_VALUE ?>" <?= $severityLevel === SeverityItem::SEVERITY_URGENT_VALUE ? 'selected' : '' ?>>
-                    <?= Text::_(SeverityItem::SEVERITY_URGENT_LABEL) ?>
-                </option>
+            <label for="<?= QltodoForm::MODULE_PREFIX ?>_severity"><?= Text::_('COM_MODULES_FIELD_STATUS_LABEL') ?></label>
+            <select id="<?= QltodoForm::MODULE_PREFIX ?>_severity" name="<?= QltodoRepository::COLUMN_SEVERITY ?>">
+                <?php foreach ($levels as $level => $label) : ?>
+                    <option value="<?= (int) $level ?>" <?= (int) $severityLevel === (int) $level ? 'selected' : '' ?>>
+                        <?= Text::_($label) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </div>
-        <input type="hidden" name="<?= QltodoRepository::COLUMN_ID ?>" value="<?= (int) $entry->id ?>" />
+        <input type="hidden" name="<?= QltodoForm::PARAM_TODO_ID ?>" value="<?= (int) $entry->id ?>" />
         <button type="submit" class="btn btn-primary"><?= Text::_('MOD_QLTODO_BUTTON_SUBMIT') ?></button>
         <?= HTMLHelper::_('form.token') ?>
     </form>

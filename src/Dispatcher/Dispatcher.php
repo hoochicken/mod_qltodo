@@ -14,6 +14,7 @@ use Exception;
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayDataInterface;
 use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
+use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Factory;
@@ -36,7 +37,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         try {
             $this->loadLanguage();
             $input = Factory::getApplication()->getInput();
-            $qltodoId = $input->getInt('qltodoid', 0);
+            $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
             // $request = array_merge($_REQUEST, $_SERVER);
 
             $displayData = $this->getLayoutDataRaw($qltodoId);
