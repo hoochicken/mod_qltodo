@@ -24,6 +24,7 @@ use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoHelper;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\WebAsset\WebAssetManager;
 use Joomla\Registry\Registry;
 
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
@@ -38,6 +39,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
     {
         try {
             $this->loadLanguage();
+
+            static::loadWebAssets();
+
+            // $wa->usePreset('mod_qltodo.styles');
+
             $input = Factory::getApplication()->getInput();
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
             $qltodoTask = $input->getString(QLtodoForm::PARAM_TODO_TASK);
@@ -133,5 +139,20 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             return $table;
         }
         return $table->createTableQltodo();
+    }
+
+    private static function loadWebAssets(): void
+    {
+        /** @var WebAssetManager $wa */
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->registerScript('mod_qltodo', 'mod_qltodo/script.js');
+        $wa->registerStyle('mod_qltodo', 'mod_qltodo/styles.css');
+
+        if (!$wa->assetExists('script', 'mod_qltodo')) {
+            var_dump('Script "mod_qltodo" NOT exists!');
+        }
+        if (!$wa->assetExists('style', 'mod_qltodo')) {
+            var_dump('Style "mod_qltodo" NOT exists!');
+        }
     }
 }

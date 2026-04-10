@@ -24,8 +24,8 @@
     
     <media destination="mod_qltodo" folder="media">
         <filename>joomla.asset.json</filename>
-        <filename>css/mod_qltodo.css</filename>
-        <filename>js/mod_qltodo.js</filename>
+        <filename>css/styles.css</filename>
+        <filename>js/script.js</filename>
     </media>
     <languages>
         <language tag="en-GB">language/en-GB/mod_qltodo.ini</language>
