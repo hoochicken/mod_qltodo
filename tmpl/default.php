@@ -18,10 +18,12 @@ $wa->useStyle('mod_qltodo');
 
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
+$cssClassShowPanel = $displayData->isDisplayTypeForm() ? 'open' : '';
+$cssClassShowButton = $displayData->isDisplayTypeForm() ? 'hide' : '';
 ?>
-<button class="mod_qltodo toggle-btn" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?></button>
+<button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?></button>
 
-<aside class="mod_qltodo sidebar" id="qltodosidebar">
+<aside class="mod_qltodo sidebar <?= $cssClassShowPanel ?>" id="qltodosidebar">
     <button class="mod_qltodo close-btn" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
 
     <<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
