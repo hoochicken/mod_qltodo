@@ -23,6 +23,11 @@ class QltodoForm
     public const TASK_SAVE_AND_CLOSE = 'todo.save.close';
     public const TASK_DELETE = 'todo.delete';
 
+    public static function isTaskCreate(?string $task): bool
+    {
+        return $task === self::TASK_CREATE;
+    }
+
     public static function isTaskClose(?string $task): bool
     {
         return $task === self::TASK_CLOSE;

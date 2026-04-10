@@ -16,6 +16,7 @@ use Hoochicken\Module\Qltodo\Site\Helper\DisplayDataInterface;
 use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
+use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
@@ -49,9 +50,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ]);
 
             $displayList =
-                0 >= $qltodoId
-                || QltodoForm::isTaskSaveAndClose($qltodoTask)
-                || QltodoForm::isTaskClose($qltodoTask);
+                !QltodoForm::isTaskCreate($qltodoTask)
+                && (
+                    0 >= $qltodoId
+                    || QltodoForm::isTaskSaveAndClose($qltodoTask)
+                    || QltodoForm::isTaskClose($qltodoTask)
+                );
 
             if (QltodoForm::isTaskSave($qltodoTask)) {
                 $entry = $helper->getTodoItemFromInput($input);
@@ -104,17 +108,17 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         // create display data object
         $displayData = new DisplayData($params);
         $displayData->setMessage($helper->getMessage($this->params, $this->getApplication()));
-        if (0 < $qltodoId && !$displayList) {
-            // single entry given by get params
-            $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : null;
-            $displayData->setDisplayForm();
-            $displayData->setQltodoEntry($entry);
-        } else {
+        if ($displayList) {
             // list of entries
             $list = $helper->getQlTodoEntries();
             $displayData->setQltodoEntries($list);
+            return $displayData;
         }
 
+        // single entry given by get params
+        $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : new TodoItem();
+        $displayData->setDisplayForm();
+        $displayData->setQltodoEntry($entry);
         return $displayData;
     }
 
