@@ -38,9 +38,23 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $this->loadLanguage();
             $input = Factory::getApplication()->getInput();
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
-            // $request = array_merge($_REQUEST, $_SERVER);
+            $qltodoTask = $input->getString(QLtodoForm::PARAM_TODO_TASK);
 
-            $displayData = $this->getLayoutDataRaw($qltodoId);
+            // init helper
+            /** @var QltodoHelper $helper */
+            $config = Factory::getContainer()->get('config');
+            $qltodoRepository = $this->getDbQltodoRepository($config);
+            $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
+                QltodoRepository::class => $qltodoRepository,
+            ]);
+
+            if (QltodoForm::isTaskSave($qltodoTask)) {
+                $entry = $helper->getTodoItemFromInput($input);
+                $helper->saveEntry($entry);
+            }
+
+            $closeForm = QltodoForm::isTaskSaveAndClose($qltodoTask);
+            $displayData = $this->getLayoutDataAdvanced($helper, $qltodoId, $closeForm);
             $path = ModuleHelper::getLayoutPath('mod_qltodo', $displayData->getParams()->getLayout());
             require $path;
         } catch (Exception $e) {
@@ -56,43 +70,42 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
     protected function getLayoutData(): array
     {
         try {
-            $data = parent::getLayoutData();
-            $this->params = new Registry($data['params']);
+            $layoutData = parent::getLayoutData();
+            $this->params = new Registry($layoutData['params']);
 
-            $displayModel = $this->getLayoutDataRaw();
+            // init database table
+            $config = Factory::getContainer()->get('config');
+            $qltodoRepository = $this->getDbQltodoRepository($config);
+
+            /** @var QltodoHelper $helper */
+            $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
+                QltodoRepository::class => $qltodoRepository,
+            ]);
+
+            $displayModel = $this->getLayoutDataAdvanced($helper);
             return $displayModel->toArray();
         } catch (Exception $e) {
             return ['msg' => $e->getMessage()];
         }
     }
 
-    protected function getLayoutDataRaw(int $qltodoId = 0): DisplayDataInterface
+    protected function getLayoutDataAdvanced(QltodoHelper $helper, int $qltodoId = 0, bool $closeForm = true): DisplayDataInterface
     {
         $data = parent::getLayoutData();
         $this->params = new Registry($data['params']);
-
-        // init database table
-        $config = Factory::getContainer()->get('config');
-        $qltodoRepository = $this->getDbQltodoRepository($config);
-
-        // list of entries
-        /** @var QltodoHelper $helper */
-        $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
-            QltodoRepository::class => $qltodoRepository,
-        ]);
-        $list = $helper->getQlTodoEntries();
         $params = new ParametersCustom($this->params ?? null, $this->module);
-
-        // single entry given by get params
-        $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : null;
 
         // create display data object
         $displayData = new DisplayData($params);
         $displayData->setMessage($helper->getMessage($this->params, $this->getApplication()));
-        if (0 < $qltodoId) {
+        if (0 < $qltodoId && !$closeForm) {
+            // single entry given by get params
+            $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : null;
             $displayData->setDisplayForm();
             $displayData->setQltodoEntry($entry);
         } else {
+            // list of entries
+            $list = $helper->getQlTodoEntries();
             $displayData->setQltodoEntries($list);
         }
 

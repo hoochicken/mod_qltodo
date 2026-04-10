@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Exception;
 use Joomla\CMS\Factory;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use Joomla\Database\DatabaseInterface;
 
@@ -72,6 +73,35 @@ class QltodoHelper
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function saveEntry(TodoItem $entry): TodoItem
+    {
+        $id = empty($entry->id)
+            ? $this->createEntry($entry)
+            : $this->updateEntry($entry);
+        return $this->qltodoRepository->getEntryById($id);
+    }
+
+    public function createEntry(TodoItem $entry): int
+    {
+        return $this->qltodoRepository->create($entry->title, $entry->description);
+    }
+
+    public function updateEntry(TodoItem $entry): int
+    {
+        $this->qltodoRepository->update($entry);
+        return $entry->id;
+    }
+
+    public function getTodoItemFromInput(Input $input): TodoItem
+    {
+        $item = new TodoItem();
+        $item->id = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
+        $item->title = $input->getString('title');
+        $item->description = $input->getString('description');
+        $item->severity = new SeverityItem($input->getInt('severity'));
+        return $item;
     }
 
     private function getQltodoRepository(): ?QltodoRepository

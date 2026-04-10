@@ -61,7 +61,9 @@ $levels = SeverityItem::getLevels();
             </select>
         </div>
         <input type="hidden" name="<?= QltodoForm::PARAM_TODO_ID ?>" value="<?= (int) $entry->id ?>" />
-        <button type="submit" class="btn btn-primary"><?= Text::_('MOD_QLTODO_BUTTON_SUBMIT') ?></button>
+        <input type="hidden" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_SAVE ?>" />
+        <button type="submit" class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_SUBMIT') ?></button>
+        <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_SAVE_AND_CLOSE ?>" class="btn btn-primary"><?= Text::_('MOD_QLTODO_BUTTON_SUBMIT_AND_CLOSE') ?></button>
         <?= HTMLHelper::_('form.token') ?>
     </form>
 </div>

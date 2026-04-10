@@ -78,9 +78,9 @@ class QltodoRepository extends Database
         return static::$definition;
     }
 
-    public function create(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = ''): void
+    public function create(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = ''): int
     {
-        $this->addEntry([
+        $id = $this->addEntry([
             static::COLUMN_TITLE => $title,
             static::COLUMN_DESCRIPTION => $description,
             static::COLUMN_MENU_ITEM_TITLE => $menuItemTitle,
@@ -91,6 +91,7 @@ class QltodoRepository extends Database
             static::COLUMN_PAGE_URL => $pageUrl,
             static::COLUMN_CREATED_AT => date(static::DB_DATE_FORMAT),
         ]);
+        return $id;
     }
 
     public function delete(int $id): void
@@ -98,12 +99,15 @@ class QltodoRepository extends Database
         $this->removeEntryById($id);
     }
 
-    public function update(int $id, array $data): void
+    public function update(TodoItem $entry): void
     {
-        if (empty($data)) {
+        if (empty($entry)) {
             return;
         }
-        $this->updateEntries($data, sprintf('id = %s', $id));
+        $this->updateEntries([
+            QltodoRepository::COLUMN_TITLE => $entry->title,
+            QltodoRepository::COLUMN_DESCRIPTION => $entry->description,
+        ], sprintf('id = %s', $entry->id));
     }
 
     /**
@@ -131,13 +135,14 @@ class QltodoRepository extends Database
         return array_map(fn($item) => $this->convertToTodoItem($item), $data);
     }
 
-    public function getEntryById(int $id): TodoItem
+    public function getEntryById(int $id): ?TodoItem
     {
         $this->setWhere(sprintf('id = %s', $id));
         $data = parent::getData([], 1);
         if (empty($data)) {
-            return [];
+            return null;
         }
+        $this->resetWhere();
         return $this->convertToTodoItem($data[0]);
     }
 

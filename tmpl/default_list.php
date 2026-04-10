@@ -38,14 +38,13 @@ $entries = array_map(function ($item) use ($returnUrl) {
     $baseUrl = (string) ($item[QltodoRepository::COLUMN_PAGE_URL] ?? '');
     $separator = str_contains($baseUrl, '?') ? '&' : '?';
     $editUrl = sprintf(
-        '%s%s%s=%s&%s=%d&return=%s',
+        '%s%s%s=%s&%s=%d',
         $baseUrl,
         $separator,
         QltodoForm::PARAM_TODO_TASK,
         QltodoForm::TASK_EDIT,
         QltodoForm::PARAM_TODO_ID,
-        $id,
-        $returnUrl
+        $id
     );
     $deleteUrl = sprintf(
         '%s%s%s=%s&%s=%d&return=%s',
