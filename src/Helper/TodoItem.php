@@ -3,6 +3,7 @@
 namespace Hoochicken\Module\Qltodo\Site\Helper;
 
 use DateTimeImmutable;
+use Joomla\CMS\Language\Text;
 
 class TodoItem
 {
@@ -27,7 +28,7 @@ class TodoItem
         return [
             QltodoRepository::COLUMN_TITLE => $this->title,
             QltodoRepository::COLUMN_DESCRIPTION => $this->description,
-            QltodoRepository::COLUMN_SEVERITY => $this->severity->label,
+            QltodoRepository::COLUMN_SEVERITY => Text::_($this->severity->label),
             QltodoRepository::COLUMN_STATE => 'state',
             QltodoRepository::COLUMN_CREATED_AT => $this->created_at->format('d.m.Y'),
         ];
