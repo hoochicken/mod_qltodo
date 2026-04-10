@@ -17,6 +17,7 @@ use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
+use Hoochicken\Module\Qltodo\Site\Helper\UrlWizard;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
@@ -107,7 +108,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         // create display data object
         $displayData = new DisplayData($params);
-        $displayData->setMessage($helper->getMessage($this->params, $this->getApplication()));
         if ($displayList) {
             // list of entries
             $list = $helper->getQlTodoEntries();
@@ -116,7 +116,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         }
 
         // single entry given by get params
-        $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : new TodoItem();
+        $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : (new TodoItem())->setPageUrl(UrlWizard::getPageUrl());
         $displayData->setDisplayForm();
         $displayData->setQltodoEntry($entry);
         return $displayData;

@@ -78,7 +78,7 @@ class QltodoRepository extends Database
         return static::$definition;
     }
 
-    public function create(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = ''): int
+    public function create(string $title = '', string $description = '', string $pageUrl = '', string $menuItemTitle = '', string $menuItemId = '', int $severity = 1, int $state = 1, int $workflow = 1): int
     {
         $id = $this->addEntry([
             static::COLUMN_TITLE => $title,

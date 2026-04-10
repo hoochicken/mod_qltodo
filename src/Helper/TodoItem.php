@@ -35,4 +35,37 @@ class TodoItem
             QltodoRepository::COLUMN_CREATED_AT => $this->created_at?->format('d.m.Y') ?? '',
         ];
     }
+
+    public function getPageUrl(): string
+    {
+        return $this->page_url;
+    }
+
+    public function setPageUrl(string $page_url): TodoItem
+    {
+        $this->page_url = $page_url;
+        return $this;
+    }
+
+    public function getMenuItemId(): int
+    {
+        return $this->menu_item_id;
+    }
+
+    public function setMenuItemId(int $menu_item_id): TodoItem
+    {
+        $this->menu_item_id = $menu_item_id;
+        return $this;
+    }
+
+    public function getMenuItemTitle(): string
+    {
+        return $this->menu_item_title;
+    }
+
+    public function setMenuItemTitle(string $menu_item_title): TodoItem
+    {
+        $this->menu_item_title = $menu_item_title;
+        return $this;
+    }
 }

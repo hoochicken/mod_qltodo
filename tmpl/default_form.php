@@ -37,6 +37,17 @@ $levels = SeverityItem::getLevels();
         />
     </div>
     <div class="control-group">
+        <label for="<?= QltodoForm::MODULE_PREFIX ?>_title"><?= Text::_('MOD_QLTODO_PAGE_URL') ?></label>
+        <input
+                id="<?= QltodoForm::MODULE_PREFIX ?>_title"
+                name="<?= QltodoRepository::COLUMN_PAGE_URL ?>"
+                type="text"
+                disabled="disabled"
+                value="<?= $entry->page_url ?>"
+                required
+        />
+    </div>
+    <div class="control-group">
         <label for="<?= QltodoForm::MODULE_PREFIX ?>_description"><?= Text::_('JGLOBAL_DESCRIPTION') ?></label>
         <textarea
                 id="<?= QltodoForm::MODULE_PREFIX ?>_description"

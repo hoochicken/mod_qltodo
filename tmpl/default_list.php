@@ -11,6 +11,7 @@ use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
+use Hoochicken\Module\Qltodo\Site\Helper\UrlWizard;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
@@ -20,13 +21,14 @@ defined('_JEXEC') or die;
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
 $columns = [
-    QltodoRepository::COLUMN_TITLE => 'Title',
-    QltodoRepository::COLUMN_DESCRIPTION => 'Description',
-    QltodoRepository::COLUMN_SEVERITY => 'Severity',
-    QltodoRepository::COLUMN_STATE  => 'State',
-    QltodoRepository::COLUMN_CREATED_AT => 'Created at',
-    'edit' => 'Edit',
-    'delete' => 'Delete',
+        QltodoRepository::COLUMN_TITLE => 'Title',
+    // QltodoRepository::COLUMN_DESCRIPTION => 'Description',
+        'gotolink' => 'Go to',
+        QltodoRepository::COLUMN_SEVERITY => 'Severity',
+        QltodoRepository::COLUMN_STATE => 'State',
+        QltodoRepository::COLUMN_CREATED_AT => 'Created at',
+        'edit' => '',
+        'delete' => '',
 ];
 
 /** @var TodoItem[] $entries */
@@ -36,38 +38,22 @@ $entries = array_map(fn($item) => $item->toArray(), $entries);
 
 $entries = array_map(function ($item) use ($returnUrl) {
     $id = (int)$item['id'] ?? 0;
-    $baseUrl = (string) ($item[QltodoRepository::COLUMN_PAGE_URL] ?? '');
+    $baseUrl = (string)($item[QltodoRepository::COLUMN_PAGE_URL] ?? '');
     $separator = str_contains($baseUrl, '?') ? '&' : '?';
-    $editUrl = sprintf(
-        '%s%s%s=%s&%s=%d',
-        $baseUrl,
-        $separator,
-        QltodoForm::PARAM_TODO_TASK,
-        QltodoForm::TASK_EDIT,
-        QltodoForm::PARAM_TODO_ID,
-        $id
-    );
-    $deleteUrl = sprintf(
-        '%s%s%s=%s&%s=%d&return=%s',
-        $baseUrl,
-        $separator,
-        QltodoForm::PARAM_TODO_TASK,
-        QltodoForm::TASK_DELETE,
-        QltodoForm::PARAM_TODO_ID,
-        $id,
-        $returnUrl
-    );
+    $urlWizard = new UrlWizard($baseUrl, $separator);
+    $pageUrl = !empty($item['page_url']) ? $item['page_url'] : '';
+    $menutItemTitle = !empty($item['menu_item_title']) ? $item['menu_item_title'] : (!empty($pageUrl) ? $pageUrl : 'menu item');
 
-    $item['edit'] = sprintf('<a href="%s" class="btn btn-secondary btn-sm">%s</a>', $editUrl, Text::_('JACTION_EDIT'));
+    $item['gotolink'] = sprintf('<a href="%s">%s</a>', $pageUrl, substr($menutItemTitle, -20));
+    $item['edit'] = sprintf('<a href="%s" class="btn btn-secondary btn-sm">%s</a>', $urlWizard->getEditUrl($id), Text::_('JACTION_EDIT'));
     $item['delete'] = sprintf(
-        '<a href="%s" class="btn btn-danger btn-sm" onclick="return confirm(\'%s\');">%s</a>',
-        $deleteUrl,
-        Text::_('JGLOBAL_CONFIRM_DELETE'),
-        Text::_('JACTION_DELETE')
+            '<a href="%s" class="btn btn-danger btn-sm" onclick="return confirm(\'%s\');">%s</a>',
+            $urlWizard->getDeleteUrl($id),
+            Text::_('JGLOBAL_CONFIRM_DELETE'),
+            Text::_('JACTION_DELETE')
     );
     return $item;
 }, $entries);
-
 
 $datagrid = new DataGrid();
 ?>
@@ -75,10 +61,8 @@ $datagrid = new DataGrid();
 <?= $datagrid->getTable($entries, $columns) ?>
 <?= $params->getMessage() ?>
 
-
 <form method="post" class="form-validate">
-    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>" class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
+    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>"
+            class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
     <?= HTMLHelper::_('form.token') ?>
 </form>
-
-
