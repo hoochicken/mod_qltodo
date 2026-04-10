@@ -2,7 +2,7 @@
 /**
  * @package     Hoochicken\Module\Qltodo
  *
- * @copyright   Copyright (C) 2025 Mareike Riegel. All rights reserved.
+ * @copyright   Copyright (C) 2026 Mareike Riegel. All rights reserved.
  * @license     GNU General Public License version 2 or later;
  */
 
@@ -14,9 +14,36 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Database\DatabaseInterface;
+use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
 
 class QltodoHelper
 {
+
+    private ?QltodoRepository $qltodoTable = null;
+
+    public function getQlTodoEntries(): array
+    {
+        // init database table
+        require_once JPATH_BASE . '/modules/mod_qltodo/vendor/autoload.php';
+        $config = Factory::getContainer()->get('config');
+        $this->qltodoTable = $this->getDbTable($config);
+
+        // $this->qltodoTable->create('test', 'description');
+        return $this->qltodoTable->getData();
+    }
+
+    private function getDbTable(Registry $config): QltodoRepository
+    {
+        $tableName = str_replace('#__', $config->get('dbprefix', ''), QltodoRepository::TABLE_NAME);
+        $table = new QltodoRepository($config->get('host', ''), $config->get('db', ''), $config->get('user', ''), $config->get('password', ''), $config->get('port', 3306));
+        $table->setTable($tableName);
+        // $table->create('test' . rand(1,1000), 'description');
+        if ($table->tableExistsQltodo()) {
+            return $table;
+        }
+        return $table->createTableQltodo();
+    }
+
     public function getMessage(Registry $params, $app): string
     {
         try {

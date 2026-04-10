@@ -14,6 +14,7 @@ use stdClass;
 class DisplayData implements DisplayDataInterface
 {
     private ParametersCustomInterface $params;
+    private array $qltodoEntries = [];
 
     public function __construct(ParametersCustomInterface $params)
     {
@@ -41,5 +42,15 @@ class DisplayData implements DisplayDataInterface
     public function setMessage(?string $message): void
     {
         $this->params->setMessage($message);
+    }
+
+    public function setQltodoEntries(array $entries): void
+    {
+        $this->qltodoEntries = $entries;
+    }
+
+    public function getQltodoEntries(): array
+    {
+        return $this->qltodoEntries;
     }
 }

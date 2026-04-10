@@ -2,10 +2,10 @@
 
 namespace Hoochicken\Module\Qltodo\Site\Helper;
 
-
+use DateTimeImmutable;
 use Hoochicken\Dbtable\Database;
 
-class QltodoTable extends Database
+class QltodoRepository extends Database
 {
     const TABLE_NAME = '#__qltodo';
     const DB_DATE_FORMAT = 'Y-m-d H:i:s';
@@ -30,7 +30,7 @@ class QltodoTable extends Database
     const DB_PASSWORD = 'password';
     const DB_PORT = 'port';
 
-    private ?ParameterBag $config;
+    private $config;
 
     protected static array $definition = [];
 
@@ -41,9 +41,10 @@ class QltodoTable extends Database
         $this->setDefinition();
     }
 
-    public function createTableQltodo()
+    public function createTableQltodo(): self
     {
         $this->createTable(static::getTable(), static::$definition);
+        return $this;
     }
 
     public function tableExistsQltodo(): bool
@@ -63,11 +64,11 @@ class QltodoTable extends Database
             static::COLUMN_STATE => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_STATE),
             static::COLUMN_WORKFLOW => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_WORKFLOW),
             static::COLUMN_SEVERITY => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_SEVERITY),
-            static::COLUMN_CREATED_AT => sprintf('`%s` timestamp DEFAULT current_timestamp()', static::COLUMN_CREATED_AT),
+            static::COLUMN_CREATED_AT => sprintf('`%s` datetime DEFAULT NULL', static::COLUMN_CREATED_AT),
             static::COLUMN_CREATED_BY => sprintf('`%s` int(20) NULL', static::COLUMN_CREATED_BY),
-            static::COLUMN_MODIFIED_AT => sprintf('`%s` timestamp DEFAULT NULL', static::COLUMN_MODIFIED_AT),
+            static::COLUMN_MODIFIED_AT => sprintf('`%s` datetime DEFAULT NULL', static::COLUMN_MODIFIED_AT),
             static::COLUMN_MODIFIED_BY => sprintf('`%s` int(20) DEFAULT NULL', static::COLUMN_MODIFIED_BY),
-            static::COLUMN_DELETED_AT => sprintf('`%s` timestamp DEFAULT NULL', static::COLUMN_DELETED_AT),
+            static::COLUMN_DELETED_AT => sprintf('`%s` datetime DEFAULT NULL', static::COLUMN_DELETED_AT),
             static::COLUMN_DELETED_BY => sprintf('`%s` int(20) DEFAULT NULL', static::COLUMN_DELETED_BY),
         ];
     }
@@ -77,7 +78,7 @@ class QltodoTable extends Database
         return static::$definition;
     }
 
-    public function createQltodo(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = '')
+    public function create(string $title = '', string $description = '', string $menuItemTitle = '', string $menuItemId = '', int $state = 1, int $workflow = 1, int $severity = 1, string $pageUrl = ''): void
     {
         $this->addEntry([
             static::COLUMN_TITLE => $title,
@@ -92,12 +93,12 @@ class QltodoTable extends Database
         ]);
     }
 
-    public function removeQltodo(int $id)
+    public function delete(int $id): void
     {
         $this->removeEntryById($id);
     }
 
-    public function updateQltodo(int $id, array $data)
+    public function update(int $id, array $data): void
     {
         if (empty($data)) {
             return;
@@ -107,7 +108,21 @@ class QltodoTable extends Database
 
     public function getData(array $selector = [], int $limit = 1000): array
     {
-        return parent::getData($selector, $limit);
+        $selector = !empty($selector)
+            ? $selector
+            : [
+                static::COLUMN_TITLE,
+                static::COLUMN_DESCRIPTION,
+                static::COLUMN_MENU_ITEM_TITLE,
+                static::COLUMN_MENU_ITEM_ID,
+                static::COLUMN_STATE,
+                static::COLUMN_WORKFLOW,
+                static::COLUMN_SEVERITY,
+                static::COLUMN_PAGE_URL,
+                static::COLUMN_CREATED_AT,
+            ];
+        $data = parent::getData($selector, $limit);
+        return array_map(fn($item) => $this->convertToTodoItem($item), $data);
     }
 
     public function getEntryById(int $id): array
@@ -120,5 +135,15 @@ class QltodoTable extends Database
     public function getTable(): string
     {
         return static::$table;
+    }
+
+    private function convertToTodoItem($item): TodoItem
+    {
+        $todoItem = new TodoItem();
+        $todoItem->title = $item['title'];
+        $todoItem->description = $item['description'];
+        $todoItem->created_at = new DateTimeImmutable($item['created_at']);
+        $todoItem->severity = new SeverityItem($item['severity']);
+        return $todoItem;
     }
 }

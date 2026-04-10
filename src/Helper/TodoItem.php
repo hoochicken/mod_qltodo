@@ -2,6 +2,8 @@
 
 namespace Hoochicken\Module\Qltodo\Site\Helper;
 
+use DateTimeImmutable;
+
 class TodoItem
 {
     public int $id = 0;
@@ -12,11 +14,22 @@ class TodoItem
     public string $menu_item_title = '';
     public int $state = 1;
     public int $workflow = 1;
-    public int $severity = 1;
-    public string $created_at = '';
+    public ?SeverityItem $severity = null;
+    public ?DateTimeImmutable $created_at;
     public int $created_by = 0;
-    public string $modified_at = '';
+    public ?DateTimeImmutable $modified_at;
     public int $modified_by = 0;
-    public string $deleted_at = '';
+    public ?DateTimeImmutable $deleted_at;
     public int $deleted_by = 0;
+
+    public function toArray(): array
+    {
+        return [
+            QltodoRepository::COLUMN_TITLE => $this->title,
+            QltodoRepository::COLUMN_DESCRIPTION => $this->description,
+            QltodoRepository::COLUMN_SEVERITY => $this->severity->label,
+            QltodoRepository::COLUMN_STATE => 'state',
+            QltodoRepository::COLUMN_CREATED_AT => $this->created_at->format('d.m.Y'),
+        ];
+    }
 }
