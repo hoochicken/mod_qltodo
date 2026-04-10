@@ -41,13 +41,13 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 280px;
+    width: 480px;
     height: 100vh;
     background: #ffffff;
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.18);
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    z-index: 1000;
+    z-index: 10000;
     padding: 24px 18px;
     overflow-y: auto;
 }
@@ -75,6 +75,8 @@
     border-radius: 8px;
 }
 
+.mod_qltodo.hide {display: none;}
+
 .mod_qltodo.sidebar nav a:hover {
     background: #dde5eb;
 }
@@ -83,7 +85,7 @@
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 1100;
+    z-index: 11000;
     border: none;
     background: #1f6feb;
     color: white;

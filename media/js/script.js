@@ -12,12 +12,32 @@
      * Module initialization
      */
     const initialize = () => {
-        // Add your custom JavaScript code here
-        // Example:
-        // const moduleElements = document.querySelectorAll('.mod_qltodo');
-        // moduleElements.forEach((element) => {
-        //     // Your code here
-        // });
+        const sidebar = document.getElementById('qltodosidebar');
+        const overlay = document.getElementById('qltodooverlay');
+        const openSidebarBtn = document.getElementById('qltodoopenSidebarBtn');
+        const closeSidebarBtn = document.getElementById('qltodocloseSidebarBtn');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+            openSidebarBtn.classList.add('hide');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            openSidebarBtn.classList.remove('hide');
+        }
+
+        openSidebarBtn.addEventListener('click', openSidebar);
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
     };
 
     // Initialize when the document is ready

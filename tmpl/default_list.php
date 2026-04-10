@@ -21,14 +21,14 @@ defined('_JEXEC') or die;
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
 $columns = [
-        QltodoRepository::COLUMN_TITLE => 'Title',
+    QltodoRepository::COLUMN_TITLE => 'Title',
     // QltodoRepository::COLUMN_DESCRIPTION => 'Description',
-        'gotolink' => 'Go to',
-        QltodoRepository::COLUMN_SEVERITY => 'Severity',
-        QltodoRepository::COLUMN_STATE => 'State',
-        QltodoRepository::COLUMN_CREATED_AT => 'Created at',
-        'edit' => '',
-        'delete' => '',
+    'gotolink' => 'Go to',
+    QltodoRepository::COLUMN_SEVERITY => 'Severity',
+    QltodoRepository::COLUMN_STATE => 'State',
+    // QltodoRepository::COLUMN_CREATED_AT => 'Created at',
+    'edit' => '',
+    'delete' => '',
 ];
 
 /** @var TodoItem[] $entries */

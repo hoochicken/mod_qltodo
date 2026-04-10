@@ -8,6 +8,7 @@
 
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -18,37 +19,27 @@ $wa->useStyle('mod_qltodo');
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
 ?>
-<button class="mod_qltodo toggle-btn" id="openSidebarBtn">☰ Open Menu</button>
+<button class="mod_qltodo toggle-btn" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?></button>
 
-<aside class="mod_qltodo sidebar" id="sidebar">
-    <button class="mod_qltodo close-btn" id="closeSidebarBtn">Close</button>
-    <h2>Sidebar Module</h2>
-    <p>
-        This is a collapsible left sidebar. You can put Joomla module content here.
-    </p>
+<aside class="mod_qltodo sidebar" id="qltodosidebar">
+    <button class="mod_qltodo close-btn" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
 
-    <nav>
-        <a href="#">Dashboard</a>
-        <a href="#">News</a>
-        <a href="#">Downloads</a>
-        <a href="#">Contact</a>
-    </nav>
+    <<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
+        <?php if ($params->displayTitle()) : ?>
+            <<?= $params->getTitleTag() ?>>
+                <?= $params->getTitle() ?>
+            </<?= $params->getTitleTag() ?>>
+         <?php endif; ?>
+    <div class="module-content">
+        <?php
+        if ($displayData->isDisplayTypeForm()) {
+            require 'default_form.php';
+        } else {
+            require 'default_list.php';
+        }
+        ?>
+    </div>
+    </<?= $params->getModuleTag() ?>>
 </aside>
 
-<div class="mod_qltodo overlay" id="overlay"></div>
-<<?= $params->getModuleTag() ?> class="<?php echo 'qltodo ' . $params->getModuleClassSuffix(); ?>">
-<?php if ($params->displayTitle()) : ?>
-    <<?= $params->getTitleTag() ?>>
-    <?= $params->getTitle() ?>
-    </<?= $params->getTitleTag() ?>>
-<?php endif; ?>
-<div class="module-content">
-<?php
-if ($displayData->isDisplayTypeForm()) {
-    require 'default_form.php';
-} else {
-    require 'default_list.php';
-}
-?>
-</div>
-</<?= $params->getModuleTag() ?>>
+<div class="mod_qltodo overlay" id="qltodooverlay"></div>
