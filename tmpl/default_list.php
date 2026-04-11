@@ -60,9 +60,3 @@ $datagrid = new DataGrid();
 
 <?= $datagrid->getTable($entries, $columns) ?>
 <?= $params->getMessage() ?>
-
-<form method="post" class="form-validate">
-    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>"
-            class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
-    <?= HTMLHelper::_('form.token') ?>
-</form>

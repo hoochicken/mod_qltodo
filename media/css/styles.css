@@ -14,6 +14,11 @@
     padding: 1rem;
 }
 
+.mod_qltodo .float-right { float:right; }
+.mod_qltodo .float-left { float:left; }
+.mod_qltodo .clear-both { clear:both; }
+.mod_qltodo .module-content > form, .mod_qltodo .module-content div, .mod_qltodo .module-content > form input, .mod_qltodo .module-content > form textarea { width:100%; }
+
 /* Example responsive styles */
 @media (max-width: 768px) {
     .mod_qltodo {
