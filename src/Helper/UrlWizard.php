@@ -49,6 +49,7 @@ class UrlWizard
         $pagelUrl = static::getPageUrl();
         $pagelUrl = preg_replace('~qltodoid=([0-9]*)~', '', $pagelUrl);
         $pagelUrl = preg_replace('~qltodotask=([0-9.a-zA-Z]*)~', '', $pagelUrl);
+        // $pagelUrl = str_replace('?&','', $pagelUrl);
         return $pagelUrl;
     }
 

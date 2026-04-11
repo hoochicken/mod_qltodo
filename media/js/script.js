@@ -27,6 +27,7 @@
             sidebar.classList.remove('open');
             overlay.classList.remove('show');
             openSidebarBtn.classList.remove('hide');
+            closePanel()
         }
 
         openSidebarBtn.addEventListener('click', openSidebar);
@@ -45,6 +46,30 @@
         initialize();
     } else {
         document.addEventListener('DOMContentLoaded', initialize);
+    }
+
+    function closePanel()
+    {
+        Joomla.request({
+            url: 'index.php?option=com_ajax&module=qltodo&method=informPanelClosed&format=json',
+            method: 'GET',
+            onSuccess(data) {
+                const response = JSON.parse(data);
+                if (response.success) {
+                    // nusers.innerText = response.data;
+                    // const confirmation = Joomla.Text._('MOD_HELLO_AJAX_OK').replace('%s', response.data);
+                    // Joomla.renderMessages({ 'info': [confirmation] });
+                } else {
+                    // const messages = { 'error': [response.message] };
+                    // Joomla.renderMessages(messages);
+                }
+            },
+            onError(xhr) {
+                // Joomla.renderMessages(Joomla.ajaxErrorsMessages(xhr));
+                // const response = JSON.parse(xhr.response);
+                // Joomla.renderMessages({ 'error': [response.message] }, undefined, true);
+            }
+        });
     }
 
     // Add to Joomla API if needed

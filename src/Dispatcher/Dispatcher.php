@@ -32,7 +32,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 {
     use HelperFactoryAwareTrait;
 
-    private const HELPER_NAME = 'QltodoHelper';
+    public const HELPER_NAME = 'QltodoHelper';
     private ?Registry $params = null;
     private QltodoRepository $qltodoTable;
 
@@ -45,7 +45,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             $input = Factory::getApplication()->getInput();
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
-            $qltodoTask = $input->getString(QLtodoForm::PARAM_TODO_TASK);
+            $qltodoTask = $input->getString(QltodoForm::PARAM_TODO_TASK);
 
             // working on gui tasks
             if (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
@@ -58,7 +58,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             /** @var QltodoHelper $helper */
             $config = Factory::getContainer()->get('config');
-            $qltodoRepository = $this->getDbQltodoRepository($config);
+            $qltodoRepository = static::getDbQltodoRepository($config);
             $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
                 QltodoRepository::class => $qltodoRepository,
                 SessionHelper::class => $session,
@@ -99,6 +99,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         // create display data object
         $displayData = new DisplayData($params);
+        $displayData->setSidebarVisible($helper->isSidebarVisible());
+
         if ($displayList) {
             // list of entries
             $list = $helper->isSessionCurrent()
@@ -118,11 +120,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         ;
         $displayData->setDisplayForm();
         $displayData->setQltodoEntry($entry);
-        $displayData->setSidebarVisible($helper->isSidebarVisible());
         return $displayData;
     }
 
-    private function getDbQltodoRepository(Registry $config): QltodoRepository
+    public static function getDbQltodoRepository(Registry $config): QltodoRepository
     {
         require_once JPATH_BASE . '/modules/mod_qltodo/vendor/autoload.php';
         $tableName = str_replace('#__', $config->get('dbprefix', ''), QltodoRepository::TABLE_NAME);

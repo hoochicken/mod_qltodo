@@ -10,6 +10,7 @@ namespace Hoochicken\Module\Qltodo\Site\Helper;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Input\Input;
 
 class QltodoHelper
@@ -22,6 +23,11 @@ class QltodoHelper
     {
         $this->qltodoRepository = $config[QltodoRepository::class] ?? null;
         $this->sessionHelper = $config[SessionHelper::class] ?? null;
+    }
+    public function informPanelClosedAjax()
+    {
+        (new SessionHelper(Factory::getApplication()->getSession()))->setSidebarVisible(false);
+        return json_encode([]);
     }
 
     public function isSessionCurrent(): bool
@@ -82,7 +88,7 @@ class QltodoHelper
         $item->title = $input->getString('title');
         $item->description = $input->getString('description');
         $item->severity = new SeverityItem($input->getInt('severity'));
-        $item->page_url = $input->getString('page_url', UrlWizard::getPageUrlCleanedUp()());
+        $item->page_url = $input->getString('page_url', UrlWizard::getPageUrlCleanedUp());
         $item->menu_item_title = $input->getString('page_url', UrlWizard::getMenuTitle());
         $item->menu_item_id = $input->getString('page_url', UrlWizard::getMenuItemId());
         return $item;

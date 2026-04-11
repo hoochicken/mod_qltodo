@@ -23,7 +23,7 @@ $wa->useStyle('mod_qltodo');
 $params = $displayData->getParams();
 
 $cssClassShowPanel = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'open' : '';
-$cssClassShowButton = $displayData->isDisplayTypeForm() ? 'hide' : '';
+$cssClassShowButton = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'hide' : '';
 $counterEntries = count($displayData->getQltodoEntries());
 ?>
 <button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?> (<?= $counterEntries ?>)</button>
