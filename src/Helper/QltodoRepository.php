@@ -161,6 +161,8 @@ class QltodoRepository extends Database
         $todoItem->state = (int) ($item['state'] ?? 1);
         $todoItem->created_at = !empty($item['created_at']) ? new DateTimeImmutable($item['created_at']) : null;
         $todoItem->severity = new SeverityItem((int) ($item['severity'] ?? 1));
+        $todoItem->menu_item_title = (string)$item['menu_item_title'] ?? '';
+        $todoItem->menu_item_id = (int)$item['menu_item_id'] ?? 0;
         return $todoItem;
     }
 }

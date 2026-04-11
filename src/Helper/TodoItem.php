@@ -33,6 +33,8 @@ class TodoItem
             QltodoRepository::COLUMN_SEVERITY => Text::_($this->severity?->label ?? ''),
             QltodoRepository::COLUMN_STATE => (string) $this->state,
             QltodoRepository::COLUMN_CREATED_AT => $this->created_at?->format('d.m.Y') ?? '',
+            QltodoRepository::COLUMN_MENU_ITEM_TITLE => $this->menu_item_title ?? '',
+            QltodoRepository::COLUMN_MENU_ITEM_ID => $this->menu_item_id ?? '',
         ];
     }
 

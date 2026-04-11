@@ -42,8 +42,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             static::loadWebAssets();
 
-            // $wa->usePreset('mod_qltodo.styles');
-
             $input = Factory::getApplication()->getInput();
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
             $qltodoTask = $input->getString(QLtodoForm::PARAM_TODO_TASK);
@@ -122,7 +120,13 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         }
 
         // single entry given by get params
-        $entry = 0 < $qltodoId ? $helper->getQlTodoEntryById($qltodoId) : (new TodoItem())->setPageUrl(UrlWizard::getPageUrl());
+        $entry = 0 < $qltodoId
+            ? $helper->getQlTodoEntryById($qltodoId) :
+            (new TodoItem())
+                ->setPageUrl(UrlWizard::getPageUrl())
+                ->setMenuItemTitle(UrlWizard::getMenuTitle())
+                ->setMenuItemId(UrlWizard::getMenuItemId())
+        ;
         $displayData->setDisplayForm();
         $displayData->setQltodoEntry($entry);
         return $displayData;
