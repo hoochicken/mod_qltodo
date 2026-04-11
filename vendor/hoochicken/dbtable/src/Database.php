@@ -91,6 +91,7 @@ abstract class Database
         $statement->execute();
 
         $data = $statement->fetchAll();
+        $this->resetWhere();
         if (!is_array($data) || empty($data)) {
             return [];
         }

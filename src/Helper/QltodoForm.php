@@ -15,11 +15,12 @@ class QltodoForm
     public const MODULE_PREFIX = 'mod_qltodo';
     public const PARAM_TODO_ID = 'qltodoid';
     public const PARAM_TODO_TASK = 'qltodotask';
-    public const TASK_TASK = 'task';
     public const TASK_CLOSE = 'todo.close';
     public const TASK_CREATE = 'todo.create';
     public const TASK_EDIT = 'todo.edit';
     public const TASK_SAVE = 'todo.save';
+    public const TASK_FILTER_CURRENT = 'todo.filter.current';
+    public const TASK_FILTER_ALL = 'todo.filter.all';
     public const TASK_SAVE_AND_CLOSE = 'todo.save.close';
     public const TASK_DELETE = 'todo.delete';
 
@@ -46,5 +47,15 @@ class QltodoForm
     public static function isTaskSaveAndClose(?string $task): bool
     {
         return $task === self::TASK_SAVE_AND_CLOSE;
+    }
+
+    public static function isTaskFilterAll(?string $task): bool
+    {
+        return $task === self::TASK_FILTER_ALL;
+    }
+
+    public static function isTaskFilterCurrent(?string $task): bool
+    {
+        return $task === self::TASK_FILTER_CURRENT;
     }
 }

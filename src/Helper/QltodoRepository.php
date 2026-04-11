@@ -101,9 +101,6 @@ class QltodoRepository extends Database
 
     public function update(TodoItem $entry): void
     {
-        if (empty($entry)) {
-            return;
-        }
         $this->updateEntries([
             QltodoRepository::COLUMN_TITLE => $entry->title,
             QltodoRepository::COLUMN_DESCRIPTION => $entry->description,
@@ -135,6 +132,36 @@ class QltodoRepository extends Database
         return array_map(fn($item) => $this->convertToTodoItem($item), $data);
     }
 
+    /**
+     * @param array $selector
+     * @param int $limit
+     * @param string $pageUrl
+     * @param int $menuItemId
+     * @return TodoItem[]
+     */
+    public function getCurrent(array $selector = [], int $limit = 1000, string $pageUrl = '', int $menuItemId = 0): array
+    {
+        $selector = !empty($selector)
+            ? $selector
+            : [
+                static::COLUMN_ID,
+                static::COLUMN_TITLE,
+                static::COLUMN_DESCRIPTION,
+                static::COLUMN_MENU_ITEM_TITLE,
+                static::COLUMN_MENU_ITEM_ID,
+                static::COLUMN_STATE,
+                static::COLUMN_WORKFLOW,
+                static::COLUMN_SEVERITY,
+                static::COLUMN_PAGE_URL,
+                static::COLUMN_CREATED_AT,
+            ];
+        $this->setWhere(
+            sprintf('%s="%s" OR %s=%s', static::COLUMN_PAGE_URL, $pageUrl, static::COLUMN_MENU_ITEM_ID, $menuItemId),
+        );
+        $data = parent::getData($selector, $limit);
+        return array_map(fn($item) => $this->convertToTodoItem($item), $data);
+    }
+
     public function getEntryById(int $id): ?TodoItem
     {
         $this->setWhere(sprintf('id = %s', $id));
@@ -142,7 +169,6 @@ class QltodoRepository extends Database
         if (empty($data)) {
             return null;
         }
-        $this->resetWhere();
         return $this->convertToTodoItem($data[0]);
     }
 

@@ -44,6 +44,14 @@ class UrlWizard
         return (Uri::getInstance())->toString();
     }
 
+    public static function getPageUrlCleanedUp(): string
+    {
+        $pagelUrl = static::getPageUrl();
+        $pagelUrl = preg_replace('~qltodoid=([0-9]*)~', '', $pagelUrl);
+        $pagelUrl = preg_replace('~qltodotask=([0-9.a-zA-Z]*)~', '', $pagelUrl);
+        return $pagelUrl;
+    }
+
     public static function getMenuTitle(): string
     {
         return Factory::getApplication()->getMenu()->getActive()->title ?? '';

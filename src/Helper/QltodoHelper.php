@@ -10,26 +10,35 @@ namespace Hoochicken\Module\Qltodo\Site\Helper;
 
 defined('_JEXEC') or die;
 
-use Exception;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Input\Input;
-use Joomla\Registry\Registry;
-use Joomla\Database\DatabaseInterface;
 
 class QltodoHelper
 {
 
-    private ?QltodoRepository $qltodoRepository = null;
+    private ?QltodoRepository $qltodoRepository;
+    private ?SessionHelper $sessionHelper;
 
     public function __construct(array $config = [])
     {
         $this->qltodoRepository = $config[QltodoRepository::class] ?? null;
+        $this->sessionHelper = $config[SessionHelper::class] ?? null;
+    }
+
+    public function isSessionCurrent(): bool
+    {
+        return $this->sessionHelper->isCurrent();
     }
 
     public function getQlTodoEntries(): array
     {
         return $this->getQltodoRepository()->getData();
+    }
+
+    public function getQlTodoEntriesCurrent(): array
+    {
+        $pageUrl = UrlWizard::getPageUrl();
+        $menuItemId = UrlWizard::getMenuItemId();
+        return $this->getQltodoRepository()->getCurrent([], 1000, $pageUrl, $menuItemId);
     }
 
     public function getQlTodoEntryById(int $id): ?TodoItem
@@ -68,7 +77,7 @@ class QltodoHelper
         $item->title = $input->getString('title');
         $item->description = $input->getString('description');
         $item->severity = new SeverityItem($input->getInt('severity'));
-        $item->page_url = $input->getString('page_url', UrlWizard::getPageUrl());
+        $item->page_url = $input->getString('page_url', UrlWizard::getPageUrlCleanedUp()());
         $item->menu_item_title = $input->getString('page_url', UrlWizard::getMenuTitle());
         $item->menu_item_id = $input->getString('page_url', UrlWizard::getMenuItemId());
         return $item;

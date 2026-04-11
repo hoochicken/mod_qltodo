@@ -16,6 +16,7 @@ use Hoochicken\Module\Qltodo\Site\Helper\DisplayDataInterface;
 use Hoochicken\Module\Qltodo\Site\Helper\ParametersCustom;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoRepository;
+use Hoochicken\Module\Qltodo\Site\Helper\SessionHelper;
 use Hoochicken\Module\Qltodo\Site\Helper\TodoItem;
 use Hoochicken\Module\Qltodo\Site\Helper\UrlWizard;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
@@ -38,9 +39,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
     public function dispatch()
     {
         try {
-            $this->loadLanguage();
-
             static::loadWebAssets();
+            $this->loadLanguage();
+            $session = new SessionHelper(Factory::getApplication()->getSession());
 
             $input = Factory::getApplication()->getInput();
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
@@ -52,16 +53,15 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $qltodoRepository = $this->getDbQltodoRepository($config);
             $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
                 QltodoRepository::class => $qltodoRepository,
+                SessionHelper::class => $session,
             ]);
 
-            $displayList =
-                !QltodoForm::isTaskCreate($qltodoTask)
-                && (
-                    0 >= $qltodoId
-                    || QltodoForm::isTaskSaveAndClose($qltodoTask)
-                    || QltodoForm::isTaskClose($qltodoTask)
-                );
-
+            // working on gui tasks
+            if (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
+                $session->setCurrent();
+            } elseif (QltodoForm::isTaskFilterAll($qltodoTask)) {
+                $session->setAll();
+            }
             if (QltodoForm::isTaskSave($qltodoTask)) {
                 $entry = $helper->getTodoItemFromInput($input);
                 $helper->saveEntry($entry);
@@ -69,6 +69,14 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 $helper->deleteEntry($qltodoId);
             }
 
+            // display data preparation
+            $displayList =
+                !QltodoForm::isTaskCreate($qltodoTask)
+                && (
+                    0 >= $qltodoId
+                    || QltodoForm::isTaskSaveAndClose($qltodoTask)
+                    || QltodoForm::isTaskClose($qltodoTask)
+                );
             $displayData = $this->getLayoutDataAdvanced($helper, $qltodoId, $displayList);
             $path = ModuleHelper::getLayoutPath('mod_qltodo', $displayData->getParams()->getLayout());
             require $path;
@@ -82,29 +90,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         return empty($displayData) || !isset($displayData['data']) || ParametersCustom::class !== get_class($displayData['data']);
     }
 
-    protected function getLayoutData(): array
-    {
-        try {
-            $layoutData = parent::getLayoutData();
-            $this->params = new Registry($layoutData['params']);
-
-            // init database table
-            $config = Factory::getContainer()->get('config');
-            $qltodoRepository = $this->getDbQltodoRepository($config);
-
-            /** @var QltodoHelper $helper */
-            $helper = $this->getHelperFactory()->getHelper(static::HELPER_NAME, [
-                QltodoRepository::class => $qltodoRepository,
-            ]);
-
-            $displayModel = $this->getLayoutDataAdvanced($helper);
-            return $displayModel->toArray();
-        } catch (Exception $e) {
-            return ['msg' => $e->getMessage()];
-        }
-    }
-
-    protected function getLayoutDataAdvanced(QltodoHelper $helper, int $qltodoId = 0, bool $displayList = true): DisplayDataInterface
+    protected function getLayoutDataAdvanced(QltodoHelper $helper, int $qltodoId = 0, $displayList = true): DisplayDataInterface
     {
         $data = parent::getLayoutData();
         $this->params = new Registry($data['params']);
@@ -114,7 +100,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $displayData = new DisplayData($params);
         if ($displayList) {
             // list of entries
-            $list = $helper->getQlTodoEntries();
+            $list = $helper->isSessionCurrent()
+                ? $helper->getQlTodoEntriesCurrent()
+                : $helper->getQlTodoEntries();
             $displayData->setQltodoEntries($list);
             return $displayData;
         }
@@ -123,7 +111,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $entry = 0 < $qltodoId
             ? $helper->getQlTodoEntryById($qltodoId) :
             (new TodoItem())
-                ->setPageUrl(UrlWizard::getPageUrl())
+                ->setPageUrl(UrlWizard::getPageUrlCleanedUp())
                 ->setMenuItemTitle(UrlWizard::getMenuTitle())
                 ->setMenuItemId(UrlWizard::getMenuItemId())
         ;

@@ -8,6 +8,7 @@
 
 use Hoochicken\Module\Qltodo\Site\Helper\DisplayData;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoForm;
+use Hoochicken\Module\Qltodo\Site\Helper\UrlWizard;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -29,6 +30,14 @@ $cssClassShowButton = $displayData->isDisplayTypeForm() ? 'hide' : '';
     <button class="mod_qltodo close-btn float-left" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
 
     <?php if ($displayData->isDisplayTypeList()) : ?>
+    <form method="post" action="<?= UrlWizard::getPageUrlCleanedUp() ?> " class="float-left">
+        <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_FILTER_ALL ?>"
+                class="float-right btn btn-ternary"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_ALL') ?></button>
+        <?= HTMLHelper::_('form.token') ?>
+        <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_FILTER_CURRENT ?>"
+                class="float-right btn btn-ternary"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_CURRENT') ?></button>
+        <?= HTMLHelper::_('form.token') ?>
+    </form>
     <form method="post" class="float-right form-validate">
         <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>"
                 class="float-right btn btn-primary btn-success"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
