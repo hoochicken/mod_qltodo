@@ -24,8 +24,9 @@ $params = $displayData->getParams();
 
 $cssClassShowPanel = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'open' : '';
 $cssClassShowButton = $displayData->isDisplayTypeForm() ? 'hide' : '';
+$counterEntries = count($displayData->getQltodoEntries());
 ?>
-<button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?></button>
+<button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?> (<?= $counterEntries ?>)</button>
 
 <aside class="mod_qltodo sidebar <?= $cssClassShowPanel ?>" id="qltodosidebar">
     <button class="mod_qltodo close-btn float-left" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>

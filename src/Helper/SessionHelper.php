@@ -22,8 +22,6 @@ class SessionHelper
     public function __construct(private SessionInterface $session)
     {
         $session->start();
-        $session->set(self::FILTER, static::FILTER_ALL);
-        $session->set(self::SIDEBAR_SHOW, false);
     }
 
     public function isSidebarVisible(): bool
@@ -38,7 +36,7 @@ class SessionHelper
 
     public function getFilter(): string
     {
-        return $this->session->get(static::FILTER);
+        return $this->session->get(static::FILTER, static::FILTER_ALL);
     }
 
     public function setAll(): void
@@ -53,11 +51,11 @@ class SessionHelper
 
     public function isAll(): bool
     {
-        return $this->session->get(static::FILTER) === self::FILTER_ALL;
+        return $this->getFilter() === self::FILTER_ALL;
     }
 
     public function isCurrent(): bool
     {
-        return $this->session->get(static::FILTER) === self::FILTER_CURRENT;
+        return $this->getFilter() === self::FILTER_CURRENT;
     }
 }
