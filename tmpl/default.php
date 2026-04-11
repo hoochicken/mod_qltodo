@@ -21,7 +21,8 @@ $wa->useStyle('mod_qltodo');
 
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
-$cssClassShowPanel = $displayData->isDisplayTypeForm() ? 'open' : '';
+
+$cssClassShowPanel = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'open' : '';
 $cssClassShowButton = $displayData->isDisplayTypeForm() ? 'hide' : '';
 ?>
 <button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?></button>

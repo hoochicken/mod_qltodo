@@ -29,6 +29,11 @@ class QltodoHelper
         return $this->sessionHelper->isCurrent();
     }
 
+    public function isSidebarVisible(): bool
+    {
+        return $this->sessionHelper->isSidebarVisible();
+    }
+
     public function getQlTodoEntries(): array
     {
         return $this->getQltodoRepository()->getData();

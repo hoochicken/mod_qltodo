@@ -47,7 +47,15 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $qltodoId = $input->getInt(QltodoForm::PARAM_TODO_ID, 0);
             $qltodoTask = $input->getString(QLtodoForm::PARAM_TODO_TASK);
 
-            // init helper
+            // working on gui tasks
+            if (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
+                $session->setCurrent();
+                $session->setSidebarVisible(true);
+            } elseif (QltodoForm::isTaskFilterAll($qltodoTask)) {
+                $session->setAll();
+                $session->setSidebarVisible(true);
+            }
+
             /** @var QltodoHelper $helper */
             $config = Factory::getContainer()->get('config');
             $qltodoRepository = $this->getDbQltodoRepository($config);
@@ -55,13 +63,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 QltodoRepository::class => $qltodoRepository,
                 SessionHelper::class => $session,
             ]);
-
-            // working on gui tasks
-            if (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
-                $session->setCurrent();
-            } elseif (QltodoForm::isTaskFilterAll($qltodoTask)) {
-                $session->setAll();
-            }
             if (QltodoForm::isTaskSave($qltodoTask)) {
                 $entry = $helper->getTodoItemFromInput($input);
                 $helper->saveEntry($entry);
@@ -117,6 +118,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         ;
         $displayData->setDisplayForm();
         $displayData->setQltodoEntry($entry);
+        $displayData->setSidebarVisible($helper->isSidebarVisible());
         return $displayData;
     }
 

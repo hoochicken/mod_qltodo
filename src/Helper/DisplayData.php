@@ -24,6 +24,7 @@ class DisplayData implements DisplayDataInterface
     private ParametersCustomInterface $params;
     private array $qltodoEntries = [];
     private ?TodoItem $qltodoEntry = null;
+    private bool $sidebarVisible = false;
 
     public function __construct(ParametersCustomInterface $params)
     {
@@ -40,6 +41,7 @@ class DisplayData implements DisplayDataInterface
             'message' => $this->params->getMessage(),
             'params' => $this->getParams(),
             'module' => $this->getParams()->getModule(),
+            'sidebarVisible' => $this->sidebarVisible,
         ];
     }
 
@@ -98,5 +100,15 @@ class DisplayData implements DisplayDataInterface
     public function setQltodoEntry(?TodoItem $qltodoEntry): void
     {
         $this->qltodoEntry = $qltodoEntry;
+    }
+
+    public function setSidebarVisible(bool $visible): void
+    {
+        $this->sidebarVisible = $visible;
+    }
+
+    public function isSidebarVisible(): bool
+    {
+        return $this->sidebarVisible;
     }
 }
