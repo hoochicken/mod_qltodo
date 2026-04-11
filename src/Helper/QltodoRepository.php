@@ -101,10 +101,12 @@ class QltodoRepository extends Database
 
     public function update(TodoItem $entry): void
     {
+        $where = sprintf('id = %s', $entry->id);
         $this->updateEntries([
             QltodoRepository::COLUMN_TITLE => $entry->title,
             QltodoRepository::COLUMN_DESCRIPTION => $entry->description,
-        ], sprintf('id = %s', $entry->id));
+            QltodoRepository::COLUMN_SEVERITY => $entry->severity->level,
+        ], $where);
     }
 
     /**
