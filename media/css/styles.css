@@ -12,7 +12,10 @@
     display: block;
     margin: 0;
     padding: 1rem;
+    font-size:14px;
 }
+
+.qltodo table {clear:both;}
 
 .mod_qltodo .float-right { float:right; }
 .mod_qltodo .float-left { float:left; }
@@ -88,14 +91,14 @@
 
 .mod_qltodo.toggle-btn {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    bottom: 0;
+    left: 0;
     z-index: 11000;
     border: none;
     background: #1f6feb;
     color: white;
-    padding: 12px 16px;
-    border-radius: 10px;
+    padding: 3px;
+    border-radius: 2px;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -150,10 +153,10 @@
     }
 
     .mod_qltodo.toggle-btn {
-        top: 14px;
-        left: 14px;
+        bottom: 0;
+        left: 0;
         font-size: 15px;
-        padding: 10px 14px;
+        padding: 2px;
     }
 
     .mod_qltodo.page-content {
