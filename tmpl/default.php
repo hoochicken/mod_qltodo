@@ -21,6 +21,7 @@ $wa->useStyle('mod_qltodo');
 
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
+HTMLHelper::_('behavior.core');
 
 $cssClassShowPanel = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'open' : '';
 $cssClassShowButton = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'hide' : '';
