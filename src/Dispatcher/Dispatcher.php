@@ -25,6 +25,7 @@ use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 use Hoochicken\Module\Qltodo\Site\Helper\QltodoHelper;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\WebAsset\WebAssetManager;
 use Joomla\Registry\Registry;
 
@@ -48,7 +49,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $qltodoTask = $input->getString(QltodoForm::PARAM_TODO_TASK);
 
             // working on gui tasks
-            if (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
+            if (QltodoForm::isTaskDelete($qltodoTask)) {
+                $session->setSidebarVisible(true);
+            } elseif (QltodoForm::isTaskFilterCurrent($qltodoTask)) {
                 $session->setCurrent();
                 $session->setSidebarVisible(true);
             } elseif (QltodoForm::isTaskFilterAll($qltodoTask)) {
@@ -68,6 +71,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 $helper->saveEntry($entry);
             } elseif (QltodoForm::isTaskDelete($qltodoTask)) {
                 $helper->deleteEntry($qltodoId);
+                $rootUrl = Uri::root();
+                header('location: ' . $rootUrl);
+                exit;
             }
 
             // display data preparation

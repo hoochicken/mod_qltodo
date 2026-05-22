@@ -21,6 +21,7 @@
 .mod_qltodo .float-left { float:left; }
 .mod_qltodo .clear-both { clear:both; }
 .mod_qltodo .module-content > form, .mod_qltodo .module-content div, .mod_qltodo .module-content > form input, .mod_qltodo .module-content > form textarea { width:100%; }
+.mod_qltodo th.gotolink {word-break: keep-all;}
 
 /* Example responsive styles */
 @media (max-width: 768px) {
@@ -112,7 +113,7 @@
     border: none;
     background: #d73a49;
     color: white;
-    padding: 10px 14px;
+    padding: 6px 12px;
     border-radius: 8px;
     cursor: pointer;
     margin-bottom: 18px;

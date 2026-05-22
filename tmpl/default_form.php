@@ -21,6 +21,7 @@ $params = $displayData->getParams();
 $entry = $displayData->getQltodoEntry();
 $severityLevel = $entry->severity?->level ?? SeverityItem::SEVERITY_LOW_VALUE;
 $levels = SeverityItem::getLevels();
+if (empty($entry)) return;
 ?>
 
 <form method="post" class="form-validate clear-both">
@@ -32,7 +33,7 @@ $levels = SeverityItem::getLevels();
                 type="text"
                 class="form-control required"
                 placeholder="<?= Text::_('JGLOBAL_TITLE') ?>"
-                value="<?= htmlspecialchars($entry->title, ENT_QUOTES, 'UTF-8') ?>"
+                value="<?= htmlspecialchars($entry->title ?? '', ENT_QUOTES, 'UTF-8') ?>"
                 required
         />
     </div>

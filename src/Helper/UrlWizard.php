@@ -8,7 +8,7 @@ use Joomla\CMS\Uri\Uri;
 class UrlWizard
 {
 
-    public function __construct(public string $baseUrl, public string $separator)
+    public function __construct(public string $httpDomain, public string $baseUrl, public string $separator)
     {
 
     }
@@ -17,7 +17,7 @@ class UrlWizard
     {
         return sprintf(
             '%s%s%s=%s&%s=%d',
-            $this->baseUrl,
+            $this->httpDomain,
             $this->separator,
             QltodoForm::PARAM_TODO_TASK,
             QltodoForm::TASK_DELETE,

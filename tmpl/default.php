@@ -30,7 +30,7 @@ $counterEntries = count($displayData->getQltodoEntries());
 <button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?> (<?= $counterEntries ?>)</button>
 
 <aside class="mod_qltodo sidebar <?= $cssClassShowPanel ?>" id="qltodosidebar">
-    <button class="mod_qltodo close-btn float-left" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
+    <button class="btn btn-primary mod_qltodo close-btn float-left" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
 
     <?php if ($displayData->isDisplayTypeList()) : ?>
     <form method="post" action="<?= UrlWizard::getPageUrlCleanedUp() ?> " class="float-left">
