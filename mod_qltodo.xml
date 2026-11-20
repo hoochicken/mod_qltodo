@@ -7,7 +7,7 @@
     <authorUrl>https://ql.de</authorUrl>
     <copyright>Copyright (C) 2026 Mareike Riegel. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later;</license>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <description><![CDATA[MOD_QLTODO_XML_DESCRIPTION]]></description>
     <namespace path="src">Hoochicken\Module\Qltodo</namespace>
     <updateservers>
