@@ -10,4 +10,7 @@ namespace Hoochicken\Module\Qltodo\Site\Helper;
 
 interface ParametersCustomInterface
 {
+    public function getItemBorderWidth(): int;
+
+    public function getItemBorderColor(): string;
 }

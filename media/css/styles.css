@@ -22,6 +22,9 @@
 .mod_qltodo .clear-both { clear:both; }
 .mod_qltodo .module-content > form, .mod_qltodo .module-content div, .mod_qltodo .module-content > form input, .mod_qltodo .module-content > form textarea { width:100%; }
 .mod_qltodo th.gotolink {word-break: keep-all;}
+.mod_qltodo .table > :not(caption) > * > * {
+    border: var(--qltodo-item-border-width, 0) solid var(--qltodo-item-border-color, #fff);
+}
 
 /* Example responsive styles */
 @media (max-width: 768px) {

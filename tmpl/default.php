@@ -27,23 +27,23 @@ $cssClassShowPanel = $displayData->isSidebarVisible() || $displayData->isDisplay
 $cssClassShowButton = $displayData->isSidebarVisible() || $displayData->isDisplayTypeForm() ? 'hide' : '';
 $counterEntries = count($displayData->getQltodoEntries());
 ?>
-<button class="mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?> (<?= $counterEntries ?>)</button>
+<button type="button" class="btn btn-primary mod_qltodo toggle-btn <?= $cssClassShowButton ?>" id="qltodoopenSidebarBtn">☰ <?= Text::_('MOD_QLTODO_GUI_OPEN') ?> (<?= $counterEntries ?>)</button>
 
-<aside class="mod_qltodo sidebar <?= $cssClassShowPanel ?>" id="qltodosidebar">
-    <button class="btn btn-primary mod_qltodo close-btn float-left" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
+<aside class="mod_qltodo sidebar bg-body shadow <?= $cssClassShowPanel ?>" id="qltodosidebar"
+       style="--qltodo-item-border-width: <?= $params->getItemBorderWidth() ?>px; --qltodo-item-border-color: <?= $params->getItemBorderColor() ?>;">
+    <button type="button" class="btn btn-danger btn-sm mod_qltodo close-btn float-left float-start" id="qltodocloseSidebarBtn"><?= Text::_('MOD_QLTODO_GUI_CLOSE') ?></button>
 
     <?php if ($displayData->isDisplayTypeList()) : ?>
-    <form method="post" action="<?= UrlWizard::getPageUrlCleanedUp() ?> " class="float-left">
+    <form method="post" action="<?= UrlWizard::getPageUrlCleanedUp() ?>" class="float-left float-start">
         <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_FILTER_ALL ?>"
-                class="float-right btn btn-ternary"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_ALL') ?></button>
-        <?= HTMLHelper::_('form.token') ?>
+                class="float-right float-end btn btn-sm btn-ternary btn-outline-secondary ms-1"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_ALL') ?></button>
         <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_FILTER_CURRENT ?>"
-                class="float-right btn btn-ternary"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_CURRENT') ?></button>
+                class="float-right float-end btn btn-sm btn-ternary btn-outline-secondary ms-1"><?= Text::_('MOD_QLTODO_BUTTON_FILTER_CURRENT') ?></button>
         <?= HTMLHelper::_('form.token') ?>
     </form>
-    <form method="post" class="float-right form-validate">
+    <form method="post" class="float-right float-end form-validate">
         <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CREATE ?>"
-                class="float-right btn btn-primary btn-success"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
+                class="float-right float-end btn btn-sm btn-success"><?= Text::_('MOD_QLTODO_BUTTON_CREATE') ?></button>
         <?= HTMLHelper::_('form.token') ?>
     </form>
     <?php endif; ?>
@@ -54,7 +54,7 @@ $counterEntries = count($displayData->getQltodoEntries());
                 <?= $params->getTitle() ?>
             </<?= $params->getTitleTag() ?>>
          <?php endif; ?>
-    <div class="module-content">
+    <div class="module-content clearfix">
         <?php
         if ($displayData->isDisplayTypeForm()) {
             require 'default_form.php';

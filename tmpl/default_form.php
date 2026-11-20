@@ -19,13 +19,13 @@ defined('_JEXEC') or die;
 /** @var ?DisplayData $displayData */
 $params = $displayData->getParams();
 $entry = $displayData->getQltodoEntry();
+if (empty($entry)) return;
 $severityLevel = $entry->severity?->level ?? SeverityItem::SEVERITY_LOW_VALUE;
 $levels = SeverityItem::getLevels();
-if (empty($entry)) return;
 ?>
 
-<form method="post" class="form-validate clear-both">
-    <div class="control-group">
+<form method="post" class="form-validate clear-both clearfix">
+    <div class="control-group mb-3">
         <!--label for="<?= QltodoForm::MODULE_PREFIX ?>_title"><?= Text::_('JGLOBAL_TITLE') ?></label-->
         <input
                 id="<?= QltodoForm::MODULE_PREFIX ?>_title"
@@ -37,18 +37,19 @@ if (empty($entry)) return;
                 required
         />
     </div>
-    <div class="control-group">
+    <div class="control-group mb-3">
         <!--label for="<?= QltodoForm::MODULE_PREFIX ?>_title"><?= Text::_('MOD_QLTODO_PAGE_URL') ?></label-->
         <input
-                id="<?= QltodoForm::MODULE_PREFIX ?>_title"
+                id="<?= QltodoForm::MODULE_PREFIX ?>_page_url"
                 name="<?= QltodoRepository::COLUMN_PAGE_URL ?>"
                 type="text"
-                disabled="form-control disabled"
-                value="<?= $entry->page_url ?>"
+                class="form-control"
+                disabled
+                value="<?= htmlspecialchars($entry->page_url ?? '', ENT_QUOTES, 'UTF-8') ?>"
                 required
         />
     </div>
-    <div class="control-group">
+    <div class="control-group mb-3">
         <!--label for="<?= QltodoForm::MODULE_PREFIX ?>_description"><?= Text::_('JGLOBAL_DESCRIPTION') ?></label-->
         <textarea
                 id="<?= QltodoForm::MODULE_PREFIX ?>_description"
@@ -56,11 +57,11 @@ if (empty($entry)) return;
                 placeholder="<?= Text::_('JGLOBAL_DESCRIPTION') ?>"
                 class="form-control"
                 rows="4"
-        ><?= htmlspecialchars($entry->description, ENT_QUOTES, 'UTF-8') ?></textarea>
+        ><?= htmlspecialchars($entry->description ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
     </div>
-    <div class="control-group">
-        <label for="<?= QltodoForm::MODULE_PREFIX ?>_severity"><?= Text::_('MOD_QLTODO_STATUS_LABEL') ?></label>
-        <select id="<?= QltodoForm::MODULE_PREFIX ?>_severity" name="<?= QltodoRepository::COLUMN_SEVERITY ?>" class="form-control">
+    <div class="control-group mb-3">
+        <label for="<?= QltodoForm::MODULE_PREFIX ?>_severity" class="form-label"><?= Text::_('MOD_QLTODO_STATUS_LABEL') ?></label>
+        <select id="<?= QltodoForm::MODULE_PREFIX ?>_severity" name="<?= QltodoRepository::COLUMN_SEVERITY ?>" class="form-select">
             <?php foreach ($levels as $level => $label) : ?>
                 <option value="<?= (int)$level ?>" <?= (int)$severityLevel === (int)$level ? 'selected' : '' ?>>
                     <?= Text::_($label) ?>
@@ -70,15 +71,15 @@ if (empty($entry)) return;
     </div>
     <input type="hidden" name="<?= QltodoForm::PARAM_TODO_ID ?>" value="<?= (int)$entry->id ?>"/>
     <input type="hidden" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_SAVE ?>"/>
-    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CLOSE ?>"class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CLOSE') ?></button>
+    <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_CLOSE ?>" class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_CLOSE') ?></button>
     <button type="submit" class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_SAVE') ?></button>
     <button type="submit" name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_SAVE_AND_CLOSE ?>"
             class="btn btn-primary"><?= Text::_('MOD_QLTODO_BUTTON_SAVE_AND_CLOSE') ?></button>
     <?= HTMLHelper::_('form.token') ?>
 </form>
 
-<form method="post" class="form-validate float-right clear-both mt-5">
-    <button type="submit" onclick="confirm('<?= Text::_('MOD_QLFORM_MSG_DELETION_CONFIRM') ?>')"
+<form method="post" class="form-validate float-right float-end clear-both mt-5">
+    <button type="submit" onclick="return confirm('<?= Text::_('MOD_QLTODO_MSG_DELETION_CONFIRM', true) ?>');"
             name="<?= QltodoForm::PARAM_TODO_TASK ?>" value="<?= QltodoForm::TASK_DELETE ?>"
             class="btn btn-secondary"><?= Text::_('MOD_QLTODO_BUTTON_DELETE') ?></button>
     <?= HTMLHelper::_('form.token') ?>

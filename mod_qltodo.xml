@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>MOD_QLTODO_TITLE</name>
-    <creationDate>2026-04-01</creationDate>
+    <creationDate>2026-11-20</creationDate>
     <author>Mareike Riegel</author>
     <authorEmail>info@ql.de</authorEmail>
     <authorUrl>https://ql.de</authorUrl>
@@ -41,6 +41,10 @@
                 <field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
                 <field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" class="form-select" validate="moduleLayout"
                        default="default"/>
+                <field name="item_border_width" type="number" label="MOD_QLTODO_FIELD_ITEM_BORDER_WIDTH_LABEL"
+                       description="MOD_QLTODO_FIELD_ITEM_BORDER_WIDTH_DESC" default="0" min="0" max="20" step="1" filter="integer"/>
+                <field name="item_border_color" type="color" label="MOD_QLTODO_FIELD_ITEM_BORDER_COLOR_LABEL"
+                       description="MOD_QLTODO_FIELD_ITEM_BORDER_COLOR_DESC" default="#fff"/>
             </fieldset>
         </fields>
     </config>
